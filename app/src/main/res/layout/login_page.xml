@@ -19,7 +19,7 @@
             android:layout_height="155dp" />
 
         <TextView
-            android:id="@+id/titleView"
+            android:id="@+id/TitleView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -47,7 +47,7 @@
 
         <EditText
             android:id="@+id/Password"
-            android:layout_width="265dp"
+            android:layout_width="264dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:ems="10"
@@ -60,7 +60,7 @@
             android:layout_height="26dp" />
 
         <Button
-            android:id="@+id/loginButton"
+            android:id="@+id/LoginButton"
             android:layout_width="111dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
