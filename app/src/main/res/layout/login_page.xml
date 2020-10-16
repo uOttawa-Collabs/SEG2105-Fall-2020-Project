@@ -65,7 +65,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="Login"
-            android:textColor="#131313"
+            android:textColor="#F6F3F3"
             android:textSize="18sp"
             app:iconTint="#F5F0F6" />
     </LinearLayout>
