@@ -1,10 +1,11 @@
-package team.returnteamname.servicenovigrad;
+package team.returnteamname.servicenovigrad.activities;
 
+import android.app.Activity;
 import android.os.Bundle;
 
-import androidx.appcompat.app.AppCompatActivity;
+import team.returnteamname.servicenovigrad.R;
 
-public class RegisterActivity extends AppCompatActivity
+public class RegisterActivity extends Activity
 {
     @Override
     protected void onCreate(Bundle savedInstanceState)

@@ -139,7 +139,6 @@
                     android:layout_width="160dp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:prompt="Select a role"
                     android:spinnerMode="dialog"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
