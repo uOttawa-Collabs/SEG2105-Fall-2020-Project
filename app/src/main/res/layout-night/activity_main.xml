@@ -18,7 +18,7 @@
             android:id="@+id/imageViewSolid"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/primaryColor"
+            android:background="@color/primaryDarkColor"
             android:contentDescription="Solid background"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -69,7 +69,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="Login"
-            android:textColor="@android:color/white"
             android:textSize="18sp" />
 
         <Space
@@ -82,7 +81,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="Create an account"
-            android:textColor="@android:color/white"
             android:textSize="18sp" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
