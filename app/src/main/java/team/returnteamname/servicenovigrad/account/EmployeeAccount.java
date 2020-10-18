@@ -7,6 +7,6 @@ public class EmployeeAccount extends Account
         username = name;
         this.password = password;
         this.email = email;
-        role = "customer";
+        role = "employee";
     }
 }

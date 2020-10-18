@@ -13,16 +13,17 @@ import team.returnteamname.servicenovigrad.R;
 
 public class RegisterActivity extends Activity
 {
+    EditText[] editTextValues = new EditText[6];
+    Intent intent;
+    String   firstName,lastName,userEmail,username,userPassword,userPassword2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        // onclick event
-        findViewById(R.id.buttonRegisterSubmit).setOnClickListener(
-            v -> startActivityForResult(new Intent(getApplicationContext(), WelcomeActivity.class),
-                                        0));
+
 
         Spinner spinner = (Spinner) findViewById(R.id.spinnerRoleSelector);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -31,7 +32,7 @@ public class RegisterActivity extends Activity
         spinner.setAdapter(adapter);
 
 
-        EditText[] editTextValues = new EditText[6];
+
 
         editTextValues[0] = (EditText) findViewById(R.id.editTextFirstName);
         editTextValues[1] = (EditText) findViewById(R.id.editTextLastName);
@@ -40,14 +41,36 @@ public class RegisterActivity extends Activity
         editTextValues[4] = (EditText) findViewById(R.id.editTextPassword);
         editTextValues[5] = (EditText) findViewById(R.id.editTextPasswordConfirm);
 
-        String   firstName  = editTextValues[0].getText().toString();
-        String   lastName  = editTextValues[1] .getText().toString();
-        String   userEmail  = editTextValues[2].getText().toString();
-        String   username  = editTextValues[3].getText().toString();
-        String   userPassword  = editTextValues[4].getText().toString();
-        String   userPassword2  = editTextValues[5].getText().toString();
+        firstName  = editTextValues[0].getText().toString();
+        lastName = editTextValues[1].getText().toString();
+        userEmail  = editTextValues[2].getText().toString();
+        username  = editTextValues[3].getText().toString();
+        userPassword  = editTextValues[4].getText().toString();
+        userPassword2  = editTextValues[5].getText().toString();
 
+
+        intent = new Intent(this, WelcomeActivity.class);
+        intent.putExtra("firstName", firstName);
+        startActivity(intent);
+
+
+
+
+
+
+
+
+
+        
         FirebaseDatabase database = FirebaseDatabase.getInstance();
 
+
+
+
+        // onclick event, by click submit, pass first name to the welcome page
+        findViewById(R.id.buttonRegisterSubmit).setOnClickListener(
+
+            v -> startActivityForResult(new Intent(getApplicationContext(), WelcomeActivity.class),
+                                        0));
     }
 }
