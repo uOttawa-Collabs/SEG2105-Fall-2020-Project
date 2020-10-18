@@ -7,6 +7,8 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.google.firebase.database.FirebaseDatabase;
+
 import team.returnteamname.servicenovigrad.R;
 
 public class RegisterActivity extends Activity
@@ -44,5 +46,8 @@ public class RegisterActivity extends Activity
         String   username  = editTextValues[3].getText().toString();
         String   userPassword  = editTextValues[4].getText().toString();
         String   userPassword2  = editTextValues[5].getText().toString();
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+
     }
 }
