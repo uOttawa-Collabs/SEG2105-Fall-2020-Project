@@ -39,9 +39,7 @@ public class WelcomeActivity extends AppCompatActivity
             }
             else
             {
-                stringBuilder.append(' ').append(
-                    accountManager.getAccountName((UserAccount) account).get("firstName")).append(
-                    '.');
+                stringBuilder.append(' ').append(((UserAccount) account).getFirstName());
             }
 
             textView.setText(stringBuilder);

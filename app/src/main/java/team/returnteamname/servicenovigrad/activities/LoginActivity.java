@@ -9,8 +9,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import team.returnteamname.servicenovigrad.R;
-import team.returnteamname.servicenovigrad.account.Account;
 import team.returnteamname.servicenovigrad.account.AccountManager;
+import team.returnteamname.servicenovigrad.account.UserAccount;
 
 public class LoginActivity extends Activity
 {
@@ -30,25 +30,27 @@ public class LoginActivity extends Activity
             @Override
             public void onClick(View v)
             {
-                String username = editTextUsername.getText().toString().trim();
-                String password = editTextPassword.getText().toString().trim();
+                String         username       = editTextUsername.getText().toString().trim();
+                String         password       = editTextPassword.getText().toString().trim();
+                AccountManager accountManager = AccountManager.getInstance();
 
-                if (username.equals("") || password.equals(""))
-                {
-                    Toast.makeText(getApplicationContext(), "Username and password cannot be empty",
-                                   Toast.LENGTH_SHORT).show();
-                }
-                else if (!AccountManager.getInstance().isInitialized())
+                if (!accountManager.isInitialized())
                 {
                     Toast.makeText(getApplicationContext(),
                                    "Database is not initialized, please check your connection",
                                    Toast.LENGTH_SHORT).show();
                 }
+                else if (username.equals("") || password.equals(""))
+                {
+                    Toast.makeText(getApplicationContext(), "Username and password cannot be empty",
+                                   Toast.LENGTH_SHORT).show();
+                }
                 else
                 {
-                    Account account = new Account(username, password);
+                    UserAccount account = new UserAccount(username, password, null, null, null,
+                                                          null);
 
-                    if (AccountManager.getInstance().verifyAccount(account))
+                    if (accountManager.verifyAccount(account))
                     {
                         Intent intent = new Intent(getApplicationContext(), WelcomeActivity.class);
                         intent.putExtra("verifiedAccount", account);

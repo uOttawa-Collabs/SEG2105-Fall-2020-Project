@@ -21,6 +21,9 @@ public class MainActivity extends Activity
         loginButton    = findViewById(R.id.buttonLogin);
         registerButton = findViewById(R.id.buttonCreateAnAccount);
 
+        loginButton.setEnabled(false);
+        registerButton.setEnabled(false);
+
         // Login button onClick event binding
         loginButton.setOnClickListener(
             v -> startActivityForResult(new Intent(getApplicationContext(), LoginActivity.class),
@@ -41,7 +44,5 @@ public class MainActivity extends Activity
                                                      loginButton.setEnabled(true);
                                                      registerButton.setEnabled(true);
                                                  });
-
-
     }
 }

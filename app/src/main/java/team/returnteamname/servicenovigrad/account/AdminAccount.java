@@ -4,13 +4,18 @@ public class AdminAccount extends Account
 {
     private AccountManager accountManager;
 
-    public AdminAccount(String username, String password, String role)
+    AdminAccount(String username, String password)
+    {
+        this(username, password, "Administrator");
+    }
+
+    AdminAccount(String username, String password, String role)
     {
         super(username, password, role);
     }
 
-    public AdminAccount(String username, String password, String role,
-                        AccountManager accountManager)
+    AdminAccount(String username, String password, String role,
+                 AccountManager accountManager)
     {
         super(username, password, role);
         this.accountManager = accountManager;

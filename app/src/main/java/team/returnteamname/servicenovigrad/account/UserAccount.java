@@ -1,13 +1,13 @@
 package team.returnteamname.servicenovigrad.account;
 
-public abstract class UserAccount extends Account
+public class UserAccount extends Account
 {
     private String firstName;
     private String lastName;
     private String email;
 
-    protected UserAccount(String username, String password, String role, String firstName,
-                          String lastName, String email)
+    public UserAccount(String username, String password, String role, String firstName,
+                       String lastName, String email)
     {
         super(username, password, role);
         this.firstName = firstName;

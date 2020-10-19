@@ -14,7 +14,6 @@ import java.util.Map;
 
 public class AccountManager
 {
-    private static final String           DEFAULT_ADMIN_ACCOUNT_NAME = "admin";
     private static final AccountManager   INSTANCE                   = new AccountManager();
     private final        FirebaseDatabase firebaseDatabase           = FirebaseDatabase.getInstance();
     private              AdminAccount     adminAccount;
@@ -168,9 +167,10 @@ public class AccountManager
         return adminAccount;
     }
 
-    public String[] getAvailableRoles()
+    @SuppressWarnings("unchecked")
+    public ArrayList<String> getAvailableRoles()
     {
-        return (String[]) availableRoles.toArray();
+        return (ArrayList<String>) availableRoles.clone();
     }
 
     public String getAccountEmail(UserAccount account)
@@ -198,64 +198,31 @@ public class AccountManager
             return null;
     }
 
-    public void createAccount(Account account)
+    public void createAccount(UserAccount account)
     {
         if (isInitialized)
         {
-            if (account instanceof AdminAccount)
-            {
-                // Reject creation
-                throw new IllegalArgumentException("Cannot create an admin account");
-            }
-            else if (account instanceof EmployeeAccount)
-            {
-                EmployeeAccount employeeAccount = (EmployeeAccount) account;
+            if (accounts.contains(account.getUsername()))
+                throw new IllegalArgumentException("Username exists");
 
-                if (accounts.contains(employeeAccount.getUsername()))
-                    throw new IllegalArgumentException("Username exists");
+            // Create a new account
+            int               uid               = accounts.size();
+            DatabaseReference databaseReference = firebaseDatabase.getReference();
 
-                // Create a new account
-                int               uid               = accounts.size();
-                DatabaseReference databaseReference = firebaseDatabase.getReference();
-
-                databaseReference.child("account").child(Integer.toString(uid)).setValue(
-                    employeeAccount.getUsername());
-                databaseReference.child("shadow").child(account.getUsername()).setValue(
-                    employeeAccount.getPassword());
-                databaseReference.child("names").child(account.getUsername()).child(
-                    "firstName").setValue(employeeAccount.getFirstName());
-                databaseReference.child("names").child(account.getUsername()).child(
-                    "lastName").setValue(employeeAccount.getLastName());
-                databaseReference.child("roleMembers").child(account.getUsername()).child(
-                    "Employer").child(Integer.toString(roleMembers.size())).setValue(
-                    account.getUsername());
-                databaseReference.child("roles").child(account.getUsername()).setValue("Employer");
-            }
-            else if (account instanceof CustomerAccount)
-            {
-                CustomerAccount customerAccount = (CustomerAccount) account;
-                if (accounts.contains(customerAccount.getUsername()))
-                    throw new IllegalArgumentException("Username exists");
-
-                // Create a new account
-                int               uid               = accounts.size();
-                DatabaseReference databaseReference = firebaseDatabase.getReference();
-
-                databaseReference.child("account").child(Integer.toString(uid)).setValue(
-                    customerAccount.getUsername());
-                databaseReference.child("shadow").child(account.getUsername()).setValue(
-                    customerAccount.getPassword());
-                databaseReference.child("names").child(account.getUsername()).child(
-                    "firstName").setValue(customerAccount.getFirstName());
-                databaseReference.child("names").child(account.getUsername()).child(
-                    "lastName").setValue(customerAccount.getLastName());
-                databaseReference.child("roleMembers").child(account.getUsername()).child(
-                    "Customer").child(Integer.toString(roleMembers.size())).setValue(
-                    account.getUsername());
-                databaseReference.child("roles").child(account.getUsername()).setValue("Customer");
-            }
-            else
-                throw new IllegalArgumentException("Unknown account type");
+            databaseReference.child("accounts").child(Integer.toString(uid)).setValue(
+                account.getUsername());
+            databaseReference.child("shadow").child(account.getUsername()).setValue(
+                account.getPassword());
+            databaseReference.child("emails").child(account.getUsername()).setValue(
+                account.getEmail());
+            databaseReference.child("names").child(account.getUsername()).child(
+                "firstName").setValue(account.getFirstName());
+            databaseReference.child("names").child(account.getUsername()).child(
+                "lastName").setValue(account.getLastName());
+            databaseReference.child("roleMembers").child(account.getRole()).child(
+                account.getUsername()).setValue(true);
+            databaseReference.child("roles").child(account.getUsername()).setValue(
+                account.getRole());
         }
         else
             throw new RuntimeException("Account manager is not ready");
@@ -275,6 +242,13 @@ public class AccountManager
                 if (password != null && password.equals(account.getPassword()))
                 {
                     account.setRole(roles.get(account.getUsername()));
+                    if (!account.getRole().equals("Administrator"))
+                    {
+                        UserAccount userAccount = (UserAccount) account;
+                        userAccount.setFirstName(names.get(account.getUsername()).get("firstName"));
+                        userAccount.setLastName(names.get(account.getUsername()).get("lastName"));
+                        userAccount.setEmail(emails.get(account.getUsername()));
+                    }
                     return true;
                 }
                 else
@@ -327,8 +301,7 @@ public class AccountManager
 
     private void bindAdminAccount()
     {
-        adminAccount = new AdminAccount(accounts.get(0), shadow.get(DEFAULT_ADMIN_ACCOUNT_NAME),
-                                        roles.get(DEFAULT_ADMIN_ACCOUNT_NAME));
+        adminAccount = new AdminAccount(accounts.get(0), shadow.get(accounts.get(0)));
         adminAccount.setAccountManager(this);
     }
 

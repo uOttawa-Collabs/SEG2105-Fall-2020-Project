@@ -9,7 +9,7 @@ public class EmployeeAccount extends UserAccount
     public EmployeeAccount(String username, String password, String firstName,
                            String lastName, String email)
     {
-        this(username, password, "Customer", firstName, lastName, email);
+        this(username, password, "Employee", firstName, lastName, email);
     }
 
     public EmployeeAccount(String username, String password, String role, String firstName,
