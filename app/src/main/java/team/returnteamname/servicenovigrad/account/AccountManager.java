@@ -8,6 +8,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 public class AccountManager
@@ -22,8 +23,8 @@ public class AccountManager
     private ArrayList<Long>   roles;
     private ArrayList<String> shadow;
 
-    private Map<String, AccountManagerCallback> accountManagerCallbacks;
-    private boolean                             isInitialized = false;
+    private final Map<String, AccountManagerCallback> accountManagerCallbacks = new HashMap<>();
+    private       boolean                             isInitialized           = false;
 
     // Singleton
     private AccountManager() {}
@@ -127,6 +128,11 @@ public class AccountManager
     public AdminAccount getAdminAccount()
     {
         return adminAccount;
+    }
+
+    public String[] getAvailableRoles()
+    {
+        return (String[]) availableRoles.toArray();
     }
 
     public void createAccount(Account account)
