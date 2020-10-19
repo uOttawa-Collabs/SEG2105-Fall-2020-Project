@@ -3,8 +3,14 @@ package team.returnteamname.servicenovigrad.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import team.returnteamname.servicenovigrad.R;
+import team.returnteamname.servicenovigrad.account.Account;
+import team.returnteamname.servicenovigrad.account.AccountManager;
 
 public class LoginActivity extends Activity
 {
@@ -13,9 +19,48 @@ public class LoginActivity extends Activity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        //onclick event
-        findViewById(R.id.buttonLogin).setOnClickListener(
-            v -> startActivityForResult(new Intent(getApplicationContext(), WelcomeActivity.class),
-                                        0));
+
+        EditText editTextUsername = findViewById(R.id.editTextUsername);
+        EditText editTextPassword = findViewById(R.id.editTextPassword);
+
+        Button loginButton = findViewById(R.id.buttonLogin);
+
+        loginButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                String username = editTextUsername.getText().toString().trim();
+                String password = editTextPassword.getText().toString().trim();
+
+                if (username.equals("") || password.equals(""))
+                {
+                    Toast.makeText(getApplicationContext(), "Username and password cannot be empty",
+                                   Toast.LENGTH_SHORT).show();
+                }
+                else if (!AccountManager.getInstance().isInitialized())
+                {
+                    Toast.makeText(getApplicationContext(),
+                                   "Database is not initialized, please check your connection",
+                                   Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    Account account = new Account(username, password);
+
+                    if (AccountManager.getInstance().verifyAccount(account))
+                    {
+                        Intent intent = new Intent(getApplicationContext(), WelcomeActivity.class);
+                        intent.putExtra("verifiedAccount", account);
+                        startActivity(intent);
+                    }
+                    else
+                    {
+                        Toast.makeText(getApplicationContext(), "Username and password mismatch",
+                                       Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
     }
 }

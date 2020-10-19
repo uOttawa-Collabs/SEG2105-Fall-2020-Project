@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
@@ -13,15 +14,18 @@ import java.util.Map;
 
 public class AccountManager
 {
-    private static final AccountManager   INSTANCE         = new AccountManager();
-    private final        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+    private static final String           DEFAULT_ADMIN_ACCOUNT_NAME = "admin";
+    private static final AccountManager   INSTANCE                   = new AccountManager();
+    private final        FirebaseDatabase firebaseDatabase           = FirebaseDatabase.getInstance();
     private              AdminAccount     adminAccount;
 
-    private ArrayList<String> accounts;
-    private ArrayList<String> availableRoles;
-    private ArrayList<Long>   roleMembers;
-    private ArrayList<Long>   roles;
-    private ArrayList<String> shadow;
+    private ArrayList<String>                        accounts;
+    private ArrayList<String>                        availableRoles;
+    private HashMap<String, String>                  emails;
+    private HashMap<String, HashMap<String, String>> names;
+    private HashMap<String, String>                  roleMembers;
+    private HashMap<String, String>                  roles;
+    private HashMap<String, String>                  shadow;
 
     private final Map<String, AccountManagerCallback> accountManagerCallbacks = new HashMap<>();
     private       boolean                             isInitialized           = false;
@@ -71,13 +75,47 @@ public class AccountManager
                 }
             });
 
+        firebaseDatabase.getReference().child("emails").addValueEventListener(
+            new ValueEventListener()
+            {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot)
+                {
+                    emails = (HashMap<String, String>) snapshot.getValue();
+                    checkIfInitialized();
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error)
+                {
+                    throw error.toException();
+                }
+            });
+
+        firebaseDatabase.getReference().child("names").addValueEventListener(
+            new ValueEventListener()
+            {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot)
+                {
+                    names = (HashMap<String, HashMap<String, String>>) snapshot.getValue();
+                    checkIfInitialized();
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error)
+                {
+                    throw error.toException();
+                }
+            });
+
         firebaseDatabase.getReference().child("roleMembers").addValueEventListener(
             new ValueEventListener()
             {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot)
                 {
-                    roleMembers = (ArrayList<Long>) snapshot.getValue();
+                    roleMembers = (HashMap<String, String>) snapshot.getValue();
                     checkIfInitialized();
                 }
 
@@ -94,7 +132,7 @@ public class AccountManager
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot)
                 {
-                    roles = (ArrayList<Long>) snapshot.getValue();
+                    roles = (HashMap<String, String>) snapshot.getValue();
                     checkIfInitialized();
                 }
 
@@ -111,7 +149,7 @@ public class AccountManager
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot)
                 {
-                    shadow = (ArrayList<String>) snapshot.getValue();
+                    shadow = (HashMap<String, String>) snapshot.getValue();
                     checkIfInitialized();
                 }
 
@@ -135,6 +173,31 @@ public class AccountManager
         return (String[]) availableRoles.toArray();
     }
 
+    public String getAccountEmail(UserAccount account)
+    {
+        if (account != null)
+            return emails.get(account.getUsername());
+        else
+            return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    public Map<String, String> getAccountName(UserAccount account)
+    {
+        if (account != null)
+            return (Map<String, String>) names.get(account.getUsername()).clone();
+        else
+            return null;
+    }
+
+    public String getAccountRole(Account account)
+    {
+        if (account != null)
+            return roles.get(account.getUsername());
+        else
+            return null;
+    }
+
     public void createAccount(Account account)
     {
         if (isInitialized)
@@ -151,12 +214,45 @@ public class AccountManager
                 if (accounts.contains(employeeAccount.getUsername()))
                     throw new IllegalArgumentException("Username exists");
 
+                // Create a new account
+                int               uid               = accounts.size();
+                DatabaseReference databaseReference = firebaseDatabase.getReference();
 
+                databaseReference.child("account").child(Integer.toString(uid)).setValue(
+                    employeeAccount.getUsername());
+                databaseReference.child("shadow").child(account.getUsername()).setValue(
+                    employeeAccount.getPassword());
+                databaseReference.child("names").child(account.getUsername()).child(
+                    "firstName").setValue(employeeAccount.getFirstName());
+                databaseReference.child("names").child(account.getUsername()).child(
+                    "lastName").setValue(employeeAccount.getLastName());
+                databaseReference.child("roleMembers").child(account.getUsername()).child(
+                    "Employer").child(Integer.toString(roleMembers.size())).setValue(
+                    account.getUsername());
+                databaseReference.child("roles").child(account.getUsername()).setValue("Employer");
             }
             else if (account instanceof CustomerAccount)
             {
                 CustomerAccount customerAccount = (CustomerAccount) account;
-                // TODO: Create the account in the database
+                if (accounts.contains(customerAccount.getUsername()))
+                    throw new IllegalArgumentException("Username exists");
+
+                // Create a new account
+                int               uid               = accounts.size();
+                DatabaseReference databaseReference = firebaseDatabase.getReference();
+
+                databaseReference.child("account").child(Integer.toString(uid)).setValue(
+                    customerAccount.getUsername());
+                databaseReference.child("shadow").child(account.getUsername()).setValue(
+                    customerAccount.getPassword());
+                databaseReference.child("names").child(account.getUsername()).child(
+                    "firstName").setValue(customerAccount.getFirstName());
+                databaseReference.child("names").child(account.getUsername()).child(
+                    "lastName").setValue(customerAccount.getLastName());
+                databaseReference.child("roleMembers").child(account.getUsername()).child(
+                    "Customer").child(Integer.toString(roleMembers.size())).setValue(
+                    account.getUsername());
+                databaseReference.child("roles").child(account.getUsername()).setValue("Customer");
             }
             else
                 throw new IllegalArgumentException("Unknown account type");
@@ -170,15 +266,19 @@ public class AccountManager
     {
         if (isInitialized)
         {
-            int uid = accounts.indexOf(account.getUsername());
-
-            if (uid < 0)
+            if (!accounts.contains(account.getUsername()))
                 return false;
 
             try
             {
-                String password = shadow.get(uid);
-                return password.equals(account.getPassword());
+                String password = shadow.get(account.getUsername());
+                if (password != null && password.equals(account.getPassword()))
+                {
+                    account.setRole(roles.get(account.getUsername()));
+                    return true;
+                }
+                else
+                    return false;
             }
             catch (IndexOutOfBoundsException ignored)
             {
@@ -206,9 +306,15 @@ public class AccountManager
         accountManagerCallbacks.put(identifier, accountManagerCallback);
     }
 
-    private void checkIfInitialized()
+    synchronized private void checkIfInitialized()
     {
-        isInitialized = accounts != null && availableRoles != null && roleMembers != null && roles != null && shadow != null;
+        isInitialized = accounts != null
+                        && availableRoles != null
+                        && emails != null
+                        && names != null
+                        && roleMembers != null
+                        && roles != null
+                        && shadow != null;
 
         if (isInitialized)
         {
@@ -221,12 +327,8 @@ public class AccountManager
 
     private void bindAdminAccount()
     {
-        if (roles.get(0) > Integer.MAX_VALUE)
-            throw new IndexOutOfBoundsException("role index is too large");
-
-        adminAccount = new AdminAccount(accounts.get(0), shadow.get(0), availableRoles.get(
-            Integer.parseInt(Long.toString(roles.get(0)))));
-
+        adminAccount = new AdminAccount(accounts.get(0), shadow.get(DEFAULT_ADMIN_ACCOUNT_NAME),
+                                        roles.get(DEFAULT_ADMIN_ACCOUNT_NAME));
         adminAccount.setAccountManager(this);
     }
 

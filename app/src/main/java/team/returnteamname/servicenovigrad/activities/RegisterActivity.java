@@ -3,7 +3,6 @@ package team.returnteamname.servicenovigrad.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -58,6 +57,4 @@ public class RegisterActivity extends Activity
             v -> startActivityForResult(new Intent(getApplicationContext(), WelcomeActivity.class),
                                         0));
     }
-
-
 }

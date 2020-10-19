@@ -1,10 +1,17 @@
 package team.returnteamname.servicenovigrad.account;
 
-public abstract class Account
+import java.io.Serializable;
+
+public class Account implements Serializable
 {
     private String username;
     private String password;
     private String role;
+
+    public Account(String username, String password)
+    {
+        this(username, password, "undefined");
+    }
 
     protected Account(String username, String password, String role)
     {
