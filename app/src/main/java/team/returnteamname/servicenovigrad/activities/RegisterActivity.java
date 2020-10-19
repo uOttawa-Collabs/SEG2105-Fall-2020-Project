@@ -3,6 +3,7 @@ package team.returnteamname.servicenovigrad.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -15,14 +16,14 @@ public class RegisterActivity extends Activity
     EditText[] editTextValues = new EditText[6];
     Intent intent;
     String   firstName,lastName,userEmail,username,userPassword,userPassword2;
-    Spinner spinnerRole;
+    Spinner spinner;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        Spinner spinner = findViewById(R.id.spinnerRoleSelector);
+        spinner = findViewById(R.id.spinnerRoleSelector);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                                                                              R.array.rolesRegister,
                                                                              android.R.layout.simple_spinner_item);
@@ -43,8 +44,8 @@ public class RegisterActivity extends Activity
         userPassword  = editTextValues[4].getText().toString();
         userPassword2 = editTextValues[5].getText().toString();
 
-        spinnerRole = (Spinner) findViewById(R.id.spinnerRoleSelector);
-        spinnerRole.setOnItemSelectedListener((AdapterView.OnItemSelectedListener) this);
+        spinner = (Spinner) findViewById(R.id.spinnerRoleSelector);
+        spinner.setOnItemSelectedListener((AdapterView.OnItemSelectedListener) this);
 
         intent = new Intent(this, WelcomeActivity.class);
         intent.putExtra("firstName", firstName);
@@ -57,4 +58,6 @@ public class RegisterActivity extends Activity
             v -> startActivityForResult(new Intent(getApplicationContext(), WelcomeActivity.class),
                                         0));
     }
+
+
 }
