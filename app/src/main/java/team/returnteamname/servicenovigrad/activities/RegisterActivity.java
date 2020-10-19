@@ -3,6 +3,7 @@ package team.returnteamname.servicenovigrad.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -14,7 +15,7 @@ public class RegisterActivity extends Activity
     EditText[] editTextValues = new EditText[6];
     Intent intent;
     String   firstName,lastName,userEmail,username,userPassword,userPassword2;
-
+    Spinner spinnerRole;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -42,6 +43,8 @@ public class RegisterActivity extends Activity
         userPassword  = editTextValues[4].getText().toString();
         userPassword2 = editTextValues[5].getText().toString();
 
+        spinnerRole = (Spinner) findViewById(R.id.spinnerRoleSelector);
+        spinnerRole.setOnItemSelectedListener((AdapterView.OnItemSelectedListener) this);
 
         intent = new Intent(this, WelcomeActivity.class);
         intent.putExtra("firstName", firstName);
