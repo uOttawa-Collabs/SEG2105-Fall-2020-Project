@@ -7,8 +7,6 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-import com.google.firebase.database.FirebaseDatabase;
-
 import team.returnteamname.servicenovigrad.R;
 
 public class RegisterActivity extends Activity
@@ -23,48 +21,31 @@ public class RegisterActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-
-
-        Spinner spinner = (Spinner) findViewById(R.id.spinnerRoleSelector);
+        Spinner spinner = findViewById(R.id.spinnerRoleSelector);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                                                                             R.array.rolesRegister, android.R.layout.simple_spinner_item);
+                                                                             R.array.rolesRegister,
+                                                                             android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
+        editTextValues[0] = findViewById(R.id.editTextFirstName);
+        editTextValues[1] = findViewById(R.id.editTextLastName);
+        editTextValues[2] = findViewById(R.id.editTextEmail);
+        editTextValues[3] = findViewById(R.id.editTextUsername);
+        editTextValues[4] = findViewById(R.id.editTextPassword);
+        editTextValues[5] = findViewById(R.id.editTextPasswordConfirm);
 
-
-
-        editTextValues[0] = (EditText) findViewById(R.id.editTextFirstName);
-        editTextValues[1] = (EditText) findViewById(R.id.editTextLastName);
-        editTextValues[2]  = (EditText) findViewById(R.id.editTextEmail);
-        editTextValues[3] = (EditText) findViewById(R.id.editTextUsername);
-        editTextValues[4] = (EditText) findViewById(R.id.editTextPassword);
-        editTextValues[5] = (EditText) findViewById(R.id.editTextPasswordConfirm);
-
-        firstName  = editTextValues[0].getText().toString();
-        lastName = editTextValues[1].getText().toString();
-        userEmail  = editTextValues[2].getText().toString();
-        username  = editTextValues[3].getText().toString();
+        firstName     = editTextValues[0].getText().toString();
+        lastName      = editTextValues[1].getText().toString();
+        userEmail     = editTextValues[2].getText().toString();
+        username      = editTextValues[3].getText().toString();
         userPassword  = editTextValues[4].getText().toString();
-        userPassword2  = editTextValues[5].getText().toString();
+        userPassword2 = editTextValues[5].getText().toString();
 
 
         intent = new Intent(this, WelcomeActivity.class);
         intent.putExtra("firstName", firstName);
         startActivity(intent);
-
-
-
-
-
-
-
-
-
-        
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-
-
 
 
         // onclick event, by click submit, pass first name to the welcome page

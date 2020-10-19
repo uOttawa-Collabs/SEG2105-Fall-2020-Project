@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import team.returnteamname.servicenovigrad.R;
+import team.returnteamname.servicenovigrad.account.AccountManager;
 
 public class MainActivity extends Activity
 {
@@ -23,5 +24,8 @@ public class MainActivity extends Activity
         findViewById(R.id.buttonCreateAnAccount).setOnClickListener(v -> startActivityForResult(
             new Intent(getApplicationContext(), RegisterActivity.class), 0));
 
+        // Initialize AccountManager
+        AccountManager.getInstance().initialize();
     }
+
 }
