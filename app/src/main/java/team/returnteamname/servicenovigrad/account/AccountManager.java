@@ -26,8 +26,8 @@ public class AccountManager
     private HashMap<String, String>                  roles;
     private HashMap<String, String>                  shadow;
 
-    private final Map<String, AccountManagerCallback> accountManagerCallbacks = new HashMap<>();
-    private       boolean                             isInitialized           = false;
+    private final Map<String, IAccountManagerCallback> accountManagerCallbacks = new HashMap<>();
+    private       boolean                              initialized             = false;
 
     // Singleton
     private AccountManager() {}
@@ -200,7 +200,7 @@ public class AccountManager
 
     public void createAccount(UserAccount account)
     {
-        if (isInitialized)
+        if (initialized)
         {
             if (accounts.contains(account.getUsername()))
                 throw new IllegalArgumentException("Username exists");
@@ -231,7 +231,7 @@ public class AccountManager
 
     public boolean verifyAccount(Account account)
     {
-        if (isInitialized)
+        if (initialized)
         {
             if (!accounts.contains(account.getUsername()))
                 return false;
@@ -266,7 +266,7 @@ public class AccountManager
 
     public boolean isInitialized()
     {
-        return isInitialized;
+        return initialized;
     }
 
     public void removeAccountManagerCallback(String identifier)
@@ -274,25 +274,24 @@ public class AccountManager
         accountManagerCallbacks.remove(identifier);
     }
 
-    public void addAccountManagerCallback(
-        String identifier, AccountManagerCallback accountManagerCallback)
+    public void addAccountManagerCallback(String identifier, IAccountManagerCallback callback)
     {
-        accountManagerCallbacks.put(identifier, accountManagerCallback);
+        accountManagerCallbacks.put(identifier, callback);
     }
 
     synchronized private void checkIfInitialized()
     {
-        isInitialized = accounts != null
-                        && availableRoles != null
-                        && emails != null
-                        && names != null
-                        && roleMembers != null
-                        && roles != null
-                        && shadow != null;
+        initialized = accounts != null
+                      && availableRoles != null
+                      && emails != null
+                      && names != null
+                      && roleMembers != null
+                      && roles != null
+                      && shadow != null;
 
-        if (isInitialized)
+        if (initialized)
         {
-            for (Map.Entry<String, AccountManagerCallback> entry : accountManagerCallbacks.entrySet())
+            for (Map.Entry<String, IAccountManagerCallback> entry : accountManagerCallbacks.entrySet())
             {
                 entry.getValue().onInitialize();
             }
@@ -305,7 +304,7 @@ public class AccountManager
         adminAccount.setAccountManager(this);
     }
 
-    public interface AccountManagerCallback
+    public interface IAccountManagerCallback
     {
         void onInitialize();
     }

@@ -31,16 +31,14 @@ public class WelcomeActivity extends AppCompatActivity
 
             StringBuilder stringBuilder = new StringBuilder();
 
-            stringBuilder.append("Welcome, ").append(account.getRole());
+            stringBuilder.append("Welcome");
 
-            if (account.getRole().equals("Administrator"))
-            {
-                stringBuilder.append(".");
-            }
-            else
+            if (!account.getRole().equals("Administrator"))
             {
                 stringBuilder.append(' ').append(((UserAccount) account).getFirstName());
             }
+
+            stringBuilder.append("! You are logged in as ").append(account.getRole()).append('.');
 
             textView.setText(stringBuilder);
         }
