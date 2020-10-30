@@ -1,63 +1,171 @@
 package team.returnteamname.servicenovigrad.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 
 import team.returnteamname.servicenovigrad.R;
+import team.returnteamname.servicenovigrad.account.Account;
+import team.returnteamname.servicenovigrad.account.UserAccount;
+import team.returnteamname.servicenovigrad.fragment.AdminCreateAccountFragment;
+import team.returnteamname.servicenovigrad.fragment.AdminCreateServiceFragment;
+import team.returnteamname.servicenovigrad.fragment.AdminDeleteAccountFragment;
+import team.returnteamname.servicenovigrad.fragment.AdminDeleteServiceFragment;
+import team.returnteamname.servicenovigrad.fragment.HomeFragment;
 
 public class DashboardActivity extends AppCompatActivity
 {
-    private AppBarConfiguration mAppBarConfiguration;
+    private static final int ADMIN_CREATE_ACCOUNT = 0;
+    private static final int ADMIN_DELETE_ACCOUNT = 1;
+    private static final int ADMIN_CREATE_SERVICE = 2;
+    private static final int ADMIN_DELETE_SERVICE = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(
-            view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show());
-        DrawerLayout   drawer         = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        mAppBarConfiguration = new AppBarConfiguration.Builder(
-            R.id.nav_home)
-            .setDrawerLayout(drawer)
-            .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-        NavigationUI.setupWithNavController(navigationView, navController);
+
+        DrawerLayout   drawer         = findViewById(R.id.layoutDrawer);
+        NavigationView navigationView = findViewById(R.id.drawerNavigationView);
+
+        Button buttonOpenDrawer = findViewById(R.id.buttonOpenDrawer);
+
+        // Menu button event binding
+        buttonOpenDrawer.setOnClickListener(v -> drawer.open());
+
+        // Handle intent parameters
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+
+        if (bundle != null)
+        {
+            Account account = (Account) bundle.get("account");
+
+            showLoginToast(account);
+            setupDrawerContent(navigationView, account, drawer);
+
+            switchFragment(account, HomeFragment.class);
+        }
+        else
+            throw new IllegalArgumentException("Invalid argument");
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu)
+    private void setupDrawerContent(NavigationView navigationView, Account account,
+                                    DrawerLayout drawer)
     {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.dashboard, menu);
-        return true;
+        Menu menu = navigationView.getMenu();
+
+        switch (account.getRole())
+        {
+            case "Administrator":
+                menu.add(Menu.NONE, ADMIN_CREATE_ACCOUNT, Menu.NONE, "Create an Account");
+                menu.add(Menu.NONE, ADMIN_DELETE_ACCOUNT, Menu.NONE, "Delete an Account");
+                menu.add(Menu.NONE, ADMIN_CREATE_SERVICE, Menu.NONE, "Create a Service");
+                menu.add(Menu.NONE, ADMIN_DELETE_SERVICE, Menu.NONE, "Delete a Service");
+            case "Employee":
+            case "Customer":
+                break;
+        }
+
+        navigationView.setNavigationItemSelectedListener(
+            item ->
+            {
+                drawerItemSelectionCallback(item, account, drawer);
+                return true;
+            });
     }
 
-    @Override
-    public boolean onSupportNavigateUp()
+    private void drawerItemSelectionCallback(MenuItem menuItem, Account account,
+                                             DrawerLayout drawer)
     {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
-               || super.onSupportNavigateUp();
+        Class<? extends Fragment> fragmentClass = null;
+
+        switch (account.getRole())
+        {
+            case "Administrator":
+            {
+                switch (menuItem.getItemId())
+                {
+                    case ADMIN_CREATE_ACCOUNT:
+                        fragmentClass = AdminCreateAccountFragment.class;
+                        break;
+                    case ADMIN_DELETE_ACCOUNT:
+                        fragmentClass = AdminDeleteAccountFragment.class;
+                        break;
+                    case ADMIN_CREATE_SERVICE:
+                        fragmentClass = AdminCreateServiceFragment.class;
+                        break;
+                    case ADMIN_DELETE_SERVICE:
+                        fragmentClass = AdminDeleteServiceFragment.class;
+                        break;
+                    default:
+                        fragmentClass = HomeFragment.class;
+                        break;
+                }
+            }
+            case "Employee":
+            case "Customer":
+                break;
+        }
+
+        switchFragment(account, fragmentClass);
+        setTitleTextView(menuItem.getTitle().toString());
+        drawer.close();
+    }
+
+    private void setTitleTextView(String title)
+    {
+        TextView textViewTitle = findViewById(R.id.textViewTitle);
+        textViewTitle.setText(title);
+    }
+
+    private void showLoginToast(Account account)
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder.append("Welcome");
+        if (!account.getRole().equals("Administrator"))
+        {
+            stringBuilder.append(' ').append(((UserAccount) account).getFirstName());
+        }
+        stringBuilder.append("! You are logged in as ").append(account.getRole()).append('.');
+        Toast.makeText(getApplicationContext(), stringBuilder.toString(),
+                       Toast.LENGTH_LONG).show();
+    }
+
+    private void switchFragment(Account account, Class<? extends Fragment> fragmentClass)
+    {
+        if (fragmentClass != null)
+        {
+            try
+            {
+                Fragment fragment = (Fragment) fragmentClass.newInstance();
+
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("account", account);
+                fragment.setArguments(bundle);
+
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.layoutFragment, fragment).commit();
+
+            }
+            catch (Exception e)
+            {
+                Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                e.printStackTrace();
+            }
+        }
     }
 }

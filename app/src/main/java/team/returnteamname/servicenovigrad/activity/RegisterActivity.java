@@ -46,7 +46,7 @@ public class RegisterActivity extends Activity
 
         Spinner spinner = findViewById(R.id.spinnerRoleSelector);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(),
-                                                          R.layout.spinner_layout,
+                                                          R.layout.activity_register_spinner,
                                                           availableRoles.subList(1,
                                                                                  availableRoles.size()));
 
@@ -94,7 +94,7 @@ public class RegisterActivity extends Activity
                                                          "All fields are required",
                                                          Toast.LENGTH_SHORT).show();
                                       }
-                                      else if (!email.matches("^[\\w-\\.]+@[\\w-]+\\.+[\\w-]{2,}$"))
+                                      else if (!email.matches("^[\\w-.]+@[\\w-]+\\.+[\\w-]{2,}$"))
                                       {
                                           Toast.makeText(getApplicationContext(),
                                                          "Invalid email address",
@@ -152,7 +152,7 @@ public class RegisterActivity extends Activity
                                                          Toast.LENGTH_LONG).show();
 
                                           Intent intent = new Intent(getApplicationContext(),
-                                                                     WelcomeActivity.class);
+                                                                     DashboardActivity.class);
                                           intent.putExtra("verifiedAccount", account);
                                           startActivity(intent);
                                       }
@@ -162,6 +162,7 @@ public class RegisterActivity extends Activity
 
     private void setSelectedRole(Integer role)
     {
-        selectedRoleIndex = role + 1;
+        if (role != null)
+            selectedRoleIndex = role + 1;
     }
 }

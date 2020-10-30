@@ -20,7 +20,5 @@ public class ServiceActivity extends Activity
         driverLicenseButton = findViewById(R.id.buttonDriverLicense);
         healthCardButton    = findViewById(R.id.buttonHealthCard);
         photoIdButton       = findViewById(R.id.buttonPhotoID);
-        
-
     }
 }

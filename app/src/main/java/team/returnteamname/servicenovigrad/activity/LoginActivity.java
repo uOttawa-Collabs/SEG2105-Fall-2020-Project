@@ -3,7 +3,6 @@ package team.returnteamname.servicenovigrad.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -25,10 +24,8 @@ public class LoginActivity extends Activity
 
         Button loginButton = findViewById(R.id.buttonLogin);
 
-        loginButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
+        loginButton.setOnClickListener(
+            v ->
             {
                 String         username       = editTextUsername.getText().toString().trim();
                 String         password       = editTextPassword.getText().toString().trim();
@@ -52,8 +49,9 @@ public class LoginActivity extends Activity
 
                     if (accountManager.verifyAccount(account))
                     {
-                        Intent intent = new Intent(getApplicationContext(), WelcomeActivity.class);
-                        intent.putExtra("verifiedAccount", account);
+                        Intent intent = new Intent(getApplicationContext(),
+                                                   DashboardActivity.class);
+                        intent.putExtra("account", account);
                         startActivity(intent);
                     }
                     else
@@ -62,7 +60,6 @@ public class LoginActivity extends Activity
                                        Toast.LENGTH_SHORT).show();
                     }
                 }
-            }
-        });
+            });
     }
 }
