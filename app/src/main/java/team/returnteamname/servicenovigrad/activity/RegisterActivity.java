@@ -1,4 +1,4 @@
-package team.returnteamname.servicenovigrad.activities;
+package team.returnteamname.servicenovigrad.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -14,10 +14,10 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import team.returnteamname.servicenovigrad.R;
-import team.returnteamname.servicenovigrad.account.AccountManager;
 import team.returnteamname.servicenovigrad.account.CustomerAccount;
 import team.returnteamname.servicenovigrad.account.EmployeeAccount;
 import team.returnteamname.servicenovigrad.account.UserAccount;
+import team.returnteamname.servicenovigrad.manager.AccountManager;
 
 public class RegisterActivity extends Activity
 {

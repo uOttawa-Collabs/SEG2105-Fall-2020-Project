@@ -1,4 +1,4 @@
-package team.returnteamname.servicenovigrad.activities;
+package team.returnteamname.servicenovigrad.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,8 +8,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import team.returnteamname.servicenovigrad.R;
 import team.returnteamname.servicenovigrad.account.Account;
-import team.returnteamname.servicenovigrad.account.AccountManager;
 import team.returnteamname.servicenovigrad.account.UserAccount;
+import team.returnteamname.servicenovigrad.manager.AccountManager;
 
 public class WelcomeActivity extends AppCompatActivity
 {

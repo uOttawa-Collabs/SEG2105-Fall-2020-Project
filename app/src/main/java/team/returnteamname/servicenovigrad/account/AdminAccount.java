@@ -1,10 +1,12 @@
 package team.returnteamname.servicenovigrad.account;
 
+import team.returnteamname.servicenovigrad.manager.AccountManager;
+
 public class AdminAccount extends Account
 {
     private AccountManager accountManager;
 
-    AdminAccount(String username, String password)
+    public AdminAccount(String username, String password)
     {
         this(username, password, "Administrator");
     }

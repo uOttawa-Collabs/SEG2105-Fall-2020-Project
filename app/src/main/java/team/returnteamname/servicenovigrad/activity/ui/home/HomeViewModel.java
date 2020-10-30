@@ -1,4 +1,4 @@
-package team.returnteamname.servicenovigrad.activities.ui.home;
+package team.returnteamname.servicenovigrad.activity.ui.home;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

@@ -1,4 +1,4 @@
-package team.returnteamname.servicenovigrad.activities;
+package team.returnteamname.servicenovigrad.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -6,7 +6,8 @@ import android.os.Bundle;
 import android.widget.Button;
 
 import team.returnteamname.servicenovigrad.R;
-import team.returnteamname.servicenovigrad.account.AccountManager;
+import team.returnteamname.servicenovigrad.manager.AccountManager;
+import team.returnteamname.servicenovigrad.manager.ServiceManager;
 
 public class MainActivity extends Activity
 {
@@ -38,11 +39,18 @@ public class MainActivity extends Activity
         accountManager.initialize();
 
         // Set buttons to enable after initialization
-        accountManager.addAccountManagerCallback("enableMainActivityButtons",
-                                                 () ->
-                                                 {
-                                                     loginButton.setEnabled(true);
-                                                     registerButton.setEnabled(true);
-                                                 });
+        accountManager.addManagerCallback("enableMainActivityButtons",
+                                          () ->
+                                          {
+                                              loginButton.setEnabled(true);
+                                              registerButton.setEnabled(true);
+                                          });
+
+        // Initialize ServiceManager after initialization of AccountManager
+        accountManager.addManagerCallback("initializeServiceManager",
+                                          () ->
+                                          {
+                                              ServiceManager.getInstance().initialize();
+                                          });
     }
 }

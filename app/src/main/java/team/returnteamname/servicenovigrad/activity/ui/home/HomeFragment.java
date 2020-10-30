@@ -1,4 +1,4 @@
-package team.returnteamname.servicenovigrad.activities.ui.home;
+package team.returnteamname.servicenovigrad.activity.ui.home;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

@@ -1,4 +1,4 @@
-package team.returnteamname.servicenovigrad.activities;
+package team.returnteamname.servicenovigrad.activity;
 
 import android.os.Bundle;
 import android.view.Menu;

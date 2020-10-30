@@ -1,4 +1,4 @@
-package team.returnteamname.servicenovigrad.account;
+package team.returnteamname.servicenovigrad.manager;
 
 import androidx.annotation.NonNull;
 
@@ -11,11 +11,17 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+
+import team.returnteamname.servicenovigrad.account.Account;
+import team.returnteamname.servicenovigrad.account.AdminAccount;
+import team.returnteamname.servicenovigrad.account.UserAccount;
+import team.returnteamname.servicenovigrad.manager.interfaces.IManagerCallback;
 
 public class AccountManager
 {
-    private static final AccountManager   INSTANCE                   = new AccountManager();
-    private final        FirebaseDatabase firebaseDatabase           = FirebaseDatabase.getInstance();
+    private static final AccountManager   INSTANCE         = new AccountManager();
+    private final        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private              AdminAccount     adminAccount;
 
     private ArrayList<String>                        accounts;
@@ -26,8 +32,8 @@ public class AccountManager
     private HashMap<String, String>                  roles;
     private HashMap<String, String>                  shadow;
 
-    private final Map<String, IAccountManagerCallback> accountManagerCallbacks = new HashMap<>();
-    private       boolean                              initialized             = false;
+    private final Map<String, IManagerCallback> managerCallbacks = new HashMap<>();
+    private       boolean                       initialized      = false;
 
     // Singleton
     private AccountManager() {}
@@ -40,7 +46,9 @@ public class AccountManager
     @SuppressWarnings("unchecked")
     public void initialize()
     {
-        firebaseDatabase.getReference().child("accounts").addValueEventListener(
+        DatabaseReference reference = firebaseDatabase.getReference();
+
+        reference.child("accounts").addValueEventListener(
             new ValueEventListener()
             {
                 @Override
@@ -57,7 +65,7 @@ public class AccountManager
                 }
             });
 
-        firebaseDatabase.getReference().child("availableRoles").addValueEventListener(
+        reference.child("availableRoles").addValueEventListener(
             new ValueEventListener()
             {
                 @Override
@@ -74,7 +82,7 @@ public class AccountManager
                 }
             });
 
-        firebaseDatabase.getReference().child("emails").addValueEventListener(
+        reference.child("emails").addValueEventListener(
             new ValueEventListener()
             {
                 @Override
@@ -91,7 +99,7 @@ public class AccountManager
                 }
             });
 
-        firebaseDatabase.getReference().child("names").addValueEventListener(
+        reference.child("names").addValueEventListener(
             new ValueEventListener()
             {
                 @Override
@@ -108,7 +116,7 @@ public class AccountManager
                 }
             });
 
-        firebaseDatabase.getReference().child("roleMembers").addValueEventListener(
+        reference.child("roleMembers").addValueEventListener(
             new ValueEventListener()
             {
                 @Override
@@ -125,7 +133,7 @@ public class AccountManager
                 }
             });
 
-        firebaseDatabase.getReference().child("roles").addValueEventListener(
+        reference.child("roles").addValueEventListener(
             new ValueEventListener()
             {
                 @Override
@@ -142,7 +150,7 @@ public class AccountManager
                 }
             });
 
-        firebaseDatabase.getReference().child("shadow").addValueEventListener(
+        reference.child("shadow").addValueEventListener(
             new ValueEventListener()
             {
                 @Override
@@ -159,10 +167,10 @@ public class AccountManager
                 }
             });
 
-        addAccountManagerCallback("bindAdminAccount", this::bindAdminAccount);
+        addManagerCallback("bindAdminAccount", this::bindAdminAccount);
     }
 
-    public AdminAccount getAdminAccount()
+    AdminAccount getAdminAccount()
     {
         return adminAccount;
     }
@@ -264,19 +272,46 @@ public class AccountManager
 
     }
 
+    public void deleteAccount(String username)
+    {
+        if (initialized)
+        {
+            if (username.equals(adminAccount.getUsername()))
+                throw new IllegalArgumentException("Reject deleting admin account");
+
+            int index = accounts.indexOf(username);
+
+            if (index == -1)
+                throw new IllegalArgumentException("Username does not exist");
+            else
+            {
+                DatabaseReference reference = firebaseDatabase.getReference();
+
+                reference.child("accounts").child(Integer.toString(index)).removeValue();
+                reference.child("emails").child(username).removeValue();
+                reference.child("names").child(username).removeValue();
+                reference.child("roleMembers").child(Objects.requireNonNull(roles.get(username))).child(username).removeValue();
+                reference.child("roles").child(username).removeValue();
+                reference.child("shadow").child(username).removeValue();
+            }
+        }
+        else
+            throw new RuntimeException("Account manager is not ready");
+    }
+
     public boolean isInitialized()
     {
         return initialized;
     }
 
-    public void removeAccountManagerCallback(String identifier)
+    public void removeManagerCallback(String identifier)
     {
-        accountManagerCallbacks.remove(identifier);
+        managerCallbacks.remove(identifier);
     }
 
-    public void addAccountManagerCallback(String identifier, IAccountManagerCallback callback)
+    public void addManagerCallback(String identifier, IManagerCallback callback)
     {
-        accountManagerCallbacks.put(identifier, callback);
+        managerCallbacks.put(identifier, callback);
     }
 
     synchronized private void checkIfInitialized()
@@ -291,7 +326,7 @@ public class AccountManager
 
         if (initialized)
         {
-            for (Map.Entry<String, IAccountManagerCallback> entry : accountManagerCallbacks.entrySet())
+            for (Map.Entry<String, IManagerCallback> entry : managerCallbacks.entrySet())
             {
                 entry.getValue().onInitialize();
             }
@@ -302,10 +337,5 @@ public class AccountManager
     {
         adminAccount = new AdminAccount(accounts.get(0), shadow.get(accounts.get(0)));
         adminAccount.setAccountManager(this);
-    }
-
-    public interface IAccountManagerCallback
-    {
-        void onInitialize();
     }
 }

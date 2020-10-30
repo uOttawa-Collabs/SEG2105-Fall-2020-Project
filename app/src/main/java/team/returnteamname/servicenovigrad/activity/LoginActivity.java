@@ -1,4 +1,4 @@
-package team.returnteamname.servicenovigrad.activities;
+package team.returnteamname.servicenovigrad.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -9,8 +9,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import team.returnteamname.servicenovigrad.R;
-import team.returnteamname.servicenovigrad.account.AccountManager;
 import team.returnteamname.servicenovigrad.account.UserAccount;
+import team.returnteamname.servicenovigrad.manager.AccountManager;
 
 public class LoginActivity extends Activity
 {
