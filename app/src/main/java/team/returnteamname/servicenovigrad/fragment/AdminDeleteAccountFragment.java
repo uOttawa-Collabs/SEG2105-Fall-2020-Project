@@ -14,12 +14,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import team.returnteamname.servicenovigrad.R;
 import team.returnteamname.servicenovigrad.account.AdminAccount;
 import team.returnteamname.servicenovigrad.manager.AccountManager;
 
 public class AdminDeleteAccountFragment extends Fragment
 {
+    private static final AccountManager ACCOUNT_MANAGER = AccountManager.getInstance();
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -35,16 +40,57 @@ public class AdminDeleteAccountFragment extends Fragment
         if (bundle != null)
         {
             AdminAccount   account        = (AdminAccount) bundle.getSerializable("account");
-            AccountManager accountManager = AccountManager.getInstance();
 
             try
             {
-                String[] accountList = accountManager.getAccountUsernameList(account);
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
-                                                                  android.R.layout.simple_list_item_1,
-                                                                  accountList);
-                listViewUsername.setAdapter(adapter);
+                List<String> accountList = new ArrayList<>();
 
+                for (String username : ACCOUNT_MANAGER.getAccountUsernameList(account))
+                {
+                    if (username != null && !username.equals("admin"))
+                        accountList.add(username);
+                }
+
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                    getContext(),
+                    android.R.layout.simple_list_item_1,
+                    accountList);
+
+                listViewUsername.setAdapter(adapter);
+                listViewUsername.setOnItemClickListener(
+                    (parent, view1, position, id) ->
+                        editTextUsername.setText(accountList.get(position))
+                );
+
+                buttonDelete.setOnClickListener(
+                    v ->
+                    {
+                        CharSequence usernameSequence = editTextUsername.getText();
+                        String       username;
+
+                        if (usernameSequence == null
+                            || (username = usernameSequence.toString().trim()).equals(""))
+                        {
+                            Toast.makeText(getContext(), "Field cannot be empty",
+                                           Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        try
+                        {
+                            ACCOUNT_MANAGER.deleteAccount(account, username);
+
+                            editTextUsername.setText("");
+                            adapter.remove(username);
+                            Toast.makeText(getContext(), "Success", Toast.LENGTH_SHORT).show();
+                        }
+                        catch (Exception e)
+                        {
+                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                            e.printStackTrace();
+                        }
+                    }
+                );
             }
             catch (Exception e)
             {

@@ -19,15 +19,13 @@ import team.returnteamname.servicenovigrad.service.Service;
 
 public class ServiceManager
 {
-    private static final ServiceManager   INSTANCE         = new ServiceManager();
-    private static final AccountManager   ACCOUNT_MANAGER  = AccountManager.getInstance();
-    private final        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-    private              AdminAccount     adminAccount;
-
-    private HashMap<String, Service> availableServices;
-
-    private final Map<String, IManagerCallback> managerCallbacks = new HashMap<>();
-    private       boolean                       initialized      = false;
+    private static final ServiceManager                INSTANCE         = new ServiceManager();
+    private static final AccountManager                ACCOUNT_MANAGER  = AccountManager.getInstance();
+    private final        FirebaseDatabase              firebaseDatabase = FirebaseDatabase.getInstance();
+    private final        Map<String, IManagerCallback> managerCallbacks = new HashMap<>();
+    private              AdminAccount                  adminAccount;
+    private              HashMap<String, Service>      availableServices;
+    private              boolean                       initialized      = false;
 
     private ServiceManager() {}
 

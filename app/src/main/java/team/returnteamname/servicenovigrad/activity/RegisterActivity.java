@@ -1,7 +1,6 @@
 package team.returnteamname.servicenovigrad.activity;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -148,15 +147,11 @@ public class RegisterActivity extends Activity
                     }
 
                     Toast.makeText(getApplicationContext(),
-                                   "Successfully registered. Logging in...",
+                                   "Successfully registered.",
                                    Toast.LENGTH_LONG).show();
 
-                    Intent intent = new Intent(getApplicationContext(),
-                                               DashboardActivity.class);
-                    intent.putExtra("verifiedAccount", account);
-                    startActivity(intent);
+                    super.finish();
                 }
             });
-
     }
 }
