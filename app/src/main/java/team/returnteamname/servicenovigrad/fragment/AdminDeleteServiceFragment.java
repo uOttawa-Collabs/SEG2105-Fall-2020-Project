@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import team.returnteamname.servicenovigrad.R;
+import team.returnteamname.servicenovigrad.account.Account;
 
 public class AdminDeleteServiceFragment extends Fragment
 {
@@ -18,6 +19,18 @@ public class AdminDeleteServiceFragment extends Fragment
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState)
     {
-        return inflater.inflate(R.layout.fragment_admin_delete_service, container, false);
+        View   view   = inflater.inflate(R.layout.fragment_admin_delete_service, container, false);
+        Bundle bundle = getArguments();
+
+        if (bundle != null)
+        {
+            Account account = (Account) bundle.getSerializable("account");
+
+
+        }
+        else
+            throw new IllegalArgumentException("Invalid argument");
+
+        return view;
     }
 }

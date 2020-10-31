@@ -1,10 +1,8 @@
 <resources>
     <string name="app_name">Service Novigrad</string>
-
     <string-array name="rolesRegister">
         <item>NONE</item>
         <item>Customer</item>
         <item>Employee</item>
     </string-array>
-
 </resources>

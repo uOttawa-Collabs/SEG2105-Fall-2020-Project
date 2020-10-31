@@ -1,6 +1,5 @@
 package team.returnteamname.servicenovigrad.fragment;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +15,6 @@ import team.returnteamname.servicenovigrad.account.Account;
 
 public class HomeFragment extends Fragment
 {
-    @SuppressLint("SetTextI18n")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
