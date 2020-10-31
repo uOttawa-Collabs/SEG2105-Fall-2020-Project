@@ -47,7 +47,7 @@ public class AdminDeleteAccountFragment extends Fragment
 
                 for (String username : ACCOUNT_MANAGER.getAccountUsernameList(account))
                 {
-                    if (username != null && !username.equals("admin"))
+                    if (username != null && !username.equals(account.getUsername()))
                         accountList.add(username);
                 }
 
