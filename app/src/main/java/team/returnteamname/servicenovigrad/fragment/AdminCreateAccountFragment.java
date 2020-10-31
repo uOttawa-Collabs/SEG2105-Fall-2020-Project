@@ -15,10 +15,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 
 import team.returnteamname.servicenovigrad.R;
-import team.returnteamname.servicenovigrad.account.Account;
+import team.returnteamname.servicenovigrad.account.AdminAccount;
 import team.returnteamname.servicenovigrad.account.CustomerAccount;
 import team.returnteamname.servicenovigrad.account.EmployeeAccount;
 import team.returnteamname.servicenovigrad.account.UserAccount;
@@ -38,7 +38,7 @@ public class AdminCreateAccountFragment extends Fragment
 
         if (bundle != null)
         {
-            Account account = (Account) bundle.getSerializable("account");
+            AdminAccount account = (AdminAccount) bundle.getSerializable("account");
 
             EditText[] editTextValues = new EditText[6];
 
@@ -53,13 +53,14 @@ public class AdminCreateAccountFragment extends Fragment
 
             Button button = view.findViewById(R.id.buttonRegisterSubmit);
 
-            ArrayList<String> availableRoles = accountManager.getAvailableRoles();
+            String[] availableRoles = accountManager.getAvailableRoles();
 
             Spinner spinner = view.findViewById(R.id.spinnerRoleSelector);
             ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
                                                               R.layout.activity_register_spinner,
-                                                              availableRoles.subList(1,
-                                                                                     availableRoles.size()));
+                                                              Arrays.copyOfRange(availableRoles, 1,
+                                                                                 availableRoles.length));
+
 
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spinner.setAdapter(adapter);
@@ -126,8 +127,7 @@ public class AdminCreateAccountFragment extends Fragment
                     }
                     else
                     {
-                        String selectedRole = accountManager.getAvailableRoles().get(
-                            selectedRoleIndex);
+                        String      selectedRole = accountManager.getAvailableRoles()[selectedRoleIndex];
                         UserAccount userAccount;
 
                         switch (selectedRole)

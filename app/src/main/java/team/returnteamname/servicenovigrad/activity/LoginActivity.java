@@ -8,7 +8,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import team.returnteamname.servicenovigrad.R;
-import team.returnteamname.servicenovigrad.account.UserAccount;
+import team.returnteamname.servicenovigrad.account.Account;
 import team.returnteamname.servicenovigrad.manager.AccountManager;
 
 public class LoginActivity extends Activity
@@ -44,10 +44,9 @@ public class LoginActivity extends Activity
                 }
                 else
                 {
-                    UserAccount account = new UserAccount(username, password, null, null, null,
-                                                          null);
+                    Account account = new Account(username, password, null);
 
-                    if (accountManager.verifyAccount(account))
+                    if ((account = accountManager.verifyAccount(account)) != null)
                     {
                         Intent intent = new Intent(getApplicationContext(),
                                                    DashboardActivity.class);

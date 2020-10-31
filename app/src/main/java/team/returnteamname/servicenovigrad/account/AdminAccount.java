@@ -4,7 +4,7 @@ import team.returnteamname.servicenovigrad.manager.AccountManager;
 
 public class AdminAccount extends Account
 {
-    private AccountManager accountManager;
+    private transient AccountManager accountManager;
 
     public AdminAccount(String username, String password)
     {

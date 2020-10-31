@@ -12,9 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import team.returnteamname.servicenovigrad.account.Account;
 import team.returnteamname.servicenovigrad.account.AdminAccount;
-import team.returnteamname.servicenovigrad.account.EmployeeAccount;
 import team.returnteamname.servicenovigrad.account.UserAccount;
 import team.returnteamname.servicenovigrad.manager.interfaces.IManagerCallback;
 import team.returnteamname.servicenovigrad.service.Service;
@@ -70,19 +68,13 @@ public class ServiceManager
         return initialized;
     }
 
-    public HashMap<String, Service> getAllServices(Account account)
+    public HashMap<String, Service> getAllServices(AdminAccount account)
     {
         if (initialized)
         {
-            if (ACCOUNT_MANAGER.verifyAccount(account))
+            if (ACCOUNT_MANAGER.verifyAccount(account) != null)
             {
-                if (account instanceof AdminAccount || account instanceof EmployeeAccount)
-                {
-                    return availableServices;
-                }
-                else
-                    throw new IllegalArgumentException(
-                        "Only administrator and employees can query all services");
+                return availableServices;
             }
             else
                 throw new IllegalArgumentException("Invalid account credential");
@@ -95,7 +87,7 @@ public class ServiceManager
     {
         if (initialized)
         {
-            if (ACCOUNT_MANAGER.verifyAccount(account))
+            if (ACCOUNT_MANAGER.verifyAccount(account) != null)
             {
                 throw new IllegalArgumentException("Not implemented yet"); // TODO
             }
@@ -110,7 +102,7 @@ public class ServiceManager
     {
         if (initialized)
         {
-            if (ACCOUNT_MANAGER.verifyAccount(adminAccount))
+            if (ACCOUNT_MANAGER.verifyAccount(adminAccount) != null)
             {
                 firebaseDatabase.getReference().child("availableServices").child(
                     service.getName()).setValue(service);
@@ -126,7 +118,7 @@ public class ServiceManager
     {
         if (initialized)
         {
-            if (ACCOUNT_MANAGER.verifyAccount(adminAccount))
+            if (ACCOUNT_MANAGER.verifyAccount(adminAccount) != null)
             {
                 firebaseDatabase.getReference().child("availableServices").child(
                     name).removeValue();

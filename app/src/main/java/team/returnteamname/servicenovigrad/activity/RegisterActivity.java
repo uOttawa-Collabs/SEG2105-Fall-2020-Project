@@ -11,7 +11,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 
 import team.returnteamname.servicenovigrad.R;
 import team.returnteamname.servicenovigrad.account.CustomerAccount;
@@ -42,13 +42,13 @@ public class RegisterActivity extends Activity
 
         Button button = findViewById(R.id.buttonRegisterSubmit);
 
-        ArrayList<String> availableRoles = accountManager.getAvailableRoles();
+        String[] availableRoles = accountManager.getAvailableRoles();
 
         Spinner spinner = findViewById(R.id.spinnerRoleSelector);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(),
                                                           R.layout.activity_register_spinner,
-                                                          availableRoles.subList(1,
-                                                                                 availableRoles.size()));
+                                                          Arrays.copyOfRange(availableRoles, 1,
+                                                                             availableRoles.length));
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
@@ -115,8 +115,7 @@ public class RegisterActivity extends Activity
                 }
                 else
                 {
-                    String selectedRole = accountManager.getAvailableRoles().get(
-                        selectedRoleIndex);
+                    String      selectedRole = accountManager.getAvailableRoles()[selectedRoleIndex];
                     UserAccount account;
 
                     switch (selectedRole)

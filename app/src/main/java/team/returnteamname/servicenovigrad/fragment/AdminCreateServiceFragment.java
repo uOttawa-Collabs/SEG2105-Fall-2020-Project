@@ -10,7 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import team.returnteamname.servicenovigrad.R;
-import team.returnteamname.servicenovigrad.account.Account;
+import team.returnteamname.servicenovigrad.account.AdminAccount;
 
 public class AdminCreateServiceFragment extends Fragment
 {
@@ -24,7 +24,7 @@ public class AdminCreateServiceFragment extends Fragment
 
         if (bundle != null)
         {
-            Account account = (Account) bundle.getSerializable("account");
+            AdminAccount account = (AdminAccount) bundle.getSerializable("account");
 
 
         }

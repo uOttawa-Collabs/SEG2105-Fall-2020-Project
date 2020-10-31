@@ -15,6 +15,8 @@ import java.util.Objects;
 
 import team.returnteamname.servicenovigrad.account.Account;
 import team.returnteamname.servicenovigrad.account.AdminAccount;
+import team.returnteamname.servicenovigrad.account.CustomerAccount;
+import team.returnteamname.servicenovigrad.account.EmployeeAccount;
 import team.returnteamname.servicenovigrad.account.UserAccount;
 import team.returnteamname.servicenovigrad.manager.interfaces.IManagerCallback;
 
@@ -172,38 +174,85 @@ public class AccountManager
 
     AdminAccount getAdminAccount()
     {
-        return adminAccount;
+        if (initialized)
+        {
+            return adminAccount;
+        }
+        else
+            throw new RuntimeException("Account manager is not ready");
     }
 
-    @SuppressWarnings("unchecked")
-    public ArrayList<String> getAvailableRoles()
+    public String[] getAvailableRoles()
     {
-        return (ArrayList<String>) availableRoles.clone();
+        if (initialized)
+        {
+            return availableRoles.toArray(new String[0]);
+        }
+        else
+            throw new RuntimeException("Account manager is not ready");
     }
 
     public String getAccountEmail(UserAccount account)
     {
-        if (account != null)
-            return emails.get(account.getUsername());
+        if (initialized)
+        {
+            if (account != null && verifyAccount(account) != null)
+            {
+                return emails.get(account.getUsername());
+            }
+            else
+                throw new IllegalArgumentException("Invalid credential");
+        }
         else
-            return null;
+            throw new RuntimeException("Account manager is not ready");
     }
 
     @SuppressWarnings("unchecked")
     public Map<String, String> getAccountName(UserAccount account)
     {
-        if (account != null)
-            return (Map<String, String>) names.get(account.getUsername()).clone();
+        if (initialized)
+        {
+            if (account != null && verifyAccount(account) != null)
+            {
+                return (Map<String, String>) Objects.requireNonNull(
+                    names.get(account.getUsername())).clone();
+            }
+            else
+                throw new IllegalArgumentException("Invalid credential");
+        }
         else
-            return null;
+            throw new RuntimeException("Account manager is not ready");
     }
 
     public String getAccountRole(Account account)
     {
-        if (account != null)
-            return roles.get(account.getUsername());
+        if (initialized)
+        {
+            if (account != null && verifyAccount(account) != null)
+            {
+                return roles.get(account.getUsername());
+            }
+            else
+                throw new IllegalArgumentException("Invalid credential");
+        }
         else
-            return null;
+            throw new RuntimeException("Account manager is not ready");
+
+    }
+
+    public String[] getAccountUsernameList(AdminAccount adminAccount)
+    {
+        if (initialized)
+        {
+            if (adminAccount != null && verifyAccount(adminAccount) != null)
+            {
+                return accounts.toArray(new String[0]);
+            }
+            else
+                throw new IllegalArgumentException("Invalid credential");
+        }
+        else
+            throw new RuntimeException("Account manager is not ready");
     }
 
     public void createAccount(UserAccount account)
@@ -237,12 +286,12 @@ public class AccountManager
 
     }
 
-    public boolean verifyAccount(Account account)
+    public Account verifyAccount(Account account)
     {
         if (initialized)
         {
             if (!accounts.contains(account.getUsername()))
-                return false;
+                return null;
 
             try
             {
@@ -250,21 +299,41 @@ public class AccountManager
                 if (password != null && password.equals(account.getPassword()))
                 {
                     account.setRole(roles.get(account.getUsername()));
-                    if (!account.getRole().equals("Administrator"))
+
+                    switch (account.getRole())
                     {
-                        UserAccount userAccount = (UserAccount) account;
-                        userAccount.setFirstName(names.get(account.getUsername()).get("firstName"));
-                        userAccount.setLastName(names.get(account.getUsername()).get("lastName"));
-                        userAccount.setEmail(emails.get(account.getUsername()));
+                        case "Administrator":
+                            return adminAccount;
+                        case "Employee":
+                            return new EmployeeAccount(
+                                account.getUsername(),
+                                account.getPassword(),
+                                account.getRole(),
+                                Objects.requireNonNull(names.get(account.getUsername())).get(
+                                    "firstName"),
+                                Objects.requireNonNull(names.get(account.getUsername())).get(
+                                    "lastName"),
+                                emails.get(account.getUsername()));
+                        case "Customer":
+                            return new CustomerAccount(
+                                account.getUsername(),
+                                account.getPassword(),
+                                account.getRole(),
+                                Objects.requireNonNull(names.get(account.getUsername())).get(
+                                    "firstName"),
+                                Objects.requireNonNull(names.get(account.getUsername())).get(
+                                    "lastName"),
+                                emails.get(account.getUsername()));
+                        default:
+                            throw new IllegalArgumentException("Unknown account role in database");
                     }
-                    return true;
                 }
                 else
-                    return false;
+                    return null;
             }
             catch (IndexOutOfBoundsException ignored)
             {
-                return false;
+                return null;
             }
         }
         else
@@ -272,28 +341,34 @@ public class AccountManager
 
     }
 
-    public void deleteAccount(String username)
+    public void deleteAccount(AdminAccount adminAccount, String username)
     {
         if (initialized)
         {
-            if (username.equals(adminAccount.getUsername()))
-                throw new IllegalArgumentException("Reject deleting admin account");
-
-            int index = accounts.indexOf(username);
-
-            if (index == -1)
-                throw new IllegalArgumentException("Username does not exist");
-            else
+            if (adminAccount != null && verifyAccount(adminAccount) != null)
             {
-                DatabaseReference reference = firebaseDatabase.getReference();
+                if (username.equals(adminAccount.getUsername()))
+                    throw new IllegalArgumentException("Reject deleting admin account");
 
-                reference.child("accounts").child(Integer.toString(index)).removeValue();
-                reference.child("emails").child(username).removeValue();
-                reference.child("names").child(username).removeValue();
-                reference.child("roleMembers").child(Objects.requireNonNull(roles.get(username))).child(username).removeValue();
-                reference.child("roles").child(username).removeValue();
-                reference.child("shadow").child(username).removeValue();
+                int index = accounts.indexOf(username);
+
+                if (index == -1)
+                    throw new IllegalArgumentException("Username does not exist");
+                else
+                {
+                    DatabaseReference reference = firebaseDatabase.getReference();
+
+                    reference.child("accounts").child(Integer.toString(index)).removeValue();
+                    reference.child("emails").child(username).removeValue();
+                    reference.child("names").child(username).removeValue();
+                    reference.child("roleMembers").child(
+                        Objects.requireNonNull(roles.get(username))).child(username).removeValue();
+                    reference.child("roles").child(username).removeValue();
+                    reference.child("shadow").child(username).removeValue();
+                }
             }
+            else
+                throw new IllegalArgumentException("Invalid credential");
         }
         else
             throw new RuntimeException("Account manager is not ready");
