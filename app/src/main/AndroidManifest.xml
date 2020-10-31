@@ -18,6 +18,7 @@
         <activity
             android:name=".activity.DashboardActivity"
             android:label="Dashboard"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.ServiceNovigrad" />
 
         <activity
