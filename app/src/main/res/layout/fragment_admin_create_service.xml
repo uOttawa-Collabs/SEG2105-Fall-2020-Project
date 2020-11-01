@@ -37,6 +37,7 @@
             android:orientation="vertical">
 
             <include layout="@layout/layout_form_document" />
+            <include layout="@layout/layout_photo_document" />
 
             <LinearLayout
                 android:id="@+id/layoutServiceController"
