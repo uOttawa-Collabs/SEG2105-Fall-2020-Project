@@ -17,33 +17,12 @@
         android:hint="New Document Name"
         android:inputType="textNoSuggestions" />
 
-    <TableLayout
-        android:id="@+id/layoutPhotoDocumentItem"
-        android:layout_width="match_parent"
+    <Button
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="20dp"
-        android:gravity="center">
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center">
-
-            <EditText
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:autofillHints="Item"
-                android:gravity="center"
-                android:hint="Item"
-                android:inputType="textNoSuggestions" />
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Delete"
-                android:textColor="@android:color/white" />
-        </TableRow>
-    </TableLayout>
+        android:layout_marginVertical="15dp"
+        android:text="Delete"
+        android:textColor="@android:color/white" />
 
     <LinearLayout
         android:id="@+id/layoutPhotoDocumentController"
@@ -65,7 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="15dp"
-            android:text="Delete DOCUMENT"
+            android:text="Delete Document"
             android:textColor="@android:color/white" />
 
     </LinearLayout>
