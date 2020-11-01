@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layoutFormDocument"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="10dp"
+    android:layout_marginVertical="10dp"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/editTextDocumentName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:autofillHints="Document name"
+        android:gravity="center"
+        android:hint="New Document Name"
+        android:inputType="textNoSuggestions" />
+
+    <TableLayout
+        android:id="@+id/layoutDocumentItem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="20dp"
+        android:gravity="center">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <EditText
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:autofillHints="Item"
+                android:gravity="center"
+                android:hint="Item"
+                android:inputType="textNoSuggestions" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:autofillHints="Regex"
+                android:gravity="center"
+                android:hint="Regular expression"
+                android:inputType="textNoSuggestions" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Delete"
+                android:textColor="@android:color/white" />
+        </TableRow>
+    </TableLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutDocumentController"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/buttonCreateItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="15dp"
+            android:text="Create an Item"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/buttonDeleteDocument"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="15dp"
+            android:text="Delete DOCUMENT"
+            android:textColor="@android:color/white" />
+
+    </LinearLayout>
+
+</LinearLayout>
