@@ -26,7 +26,6 @@ public class AdminCreateServiceFragment extends Fragment
         {
             AdminAccount account = (AdminAccount) bundle.getSerializable("account");
 
-
         }
         else
             throw new IllegalArgumentException("Invalid argument");
