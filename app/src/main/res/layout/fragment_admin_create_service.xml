@@ -5,14 +5,106 @@
     android:id="@+id/layoutAdminCreateServiceFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     tools:context=".fragment.AdminCreateServiceFragment">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+    <EditText
+        android:id="@+id/editTextNewServiceName"
+        android:layout_width="233dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="44dp"
+        android:ems="10"
+        android:gravity="center"
+        android:hint="New Service Name"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
+    <RelativeLayout
+        android:id="@+id/relativeLayoutDoc"
+        android:layout_width="376dp"
+        android:layout_height="195dp"
+        android:layout_marginTop="72dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextNewServiceName">
+
+        <TextView
+            android:id="@+id/textViewForm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="start"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="30dp"
+            android:text="Form: Personal Info"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/buttonDeleteDoc"
+            android:layout_width="77dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="end"
+            android:layout_marginTop="18dp"
+            android:layout_marginEnd="27dp"
+            android:text="delete"
+            android:textSize="12sp" />
+
+<<<<<<< HEAD
+        <TextView
+            android:id="@+id/textViewPhotoDoc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="start"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="88dp"
+            android:text="Photo: Proof of Residence"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/buttonDeletePhotoDoc"
+            android:layout_width="78dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="end"
+            android:layout_marginTop="72dp"
+            android:layout_marginEnd="27dp"
+            android:text="delete"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/buttonAddDoc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="146dp"
+            android:layout_marginBottom="10dp"
+            android:text="Add More" />
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/buttonCreate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="92dp"
+        android:text="Create"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayoutDoc" />
+=======
     </FrameLayout>
+>>>>>>> e55777b255d5cc95f940a4cba8b711fac94fd068
 
 </androidx.constraintlayout.widget.ConstraintLayout>
