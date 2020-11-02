@@ -81,7 +81,7 @@ public class ServiceManager
             throw new RuntimeException("Service manager is not ready");
     }
 
-    public List<Service> getAccountServices(UserAccount account, String branchName)
+    public Service[] getAccountServices(UserAccount account, String branchName)
     {
         if (initialized)
         {

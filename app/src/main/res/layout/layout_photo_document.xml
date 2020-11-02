@@ -12,40 +12,18 @@
         android:id="@+id/editTextPhotoDocumentName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginVertical="15dp"
         android:autofillHints="Document name"
         android:gravity="center"
         android:hint="New Document Name"
         android:inputType="textNoSuggestions" />
 
     <Button
+        android:id="@+id/buttonDeleteDocument"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="15dp"
-        android:text="Delete"
+        android:layout_marginHorizontal="15dp"
+        android:text="Delete Document"
         android:textColor="@android:color/white" />
 
-    <LinearLayout
-        android:id="@+id/layoutPhotoDocumentController"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/buttonCreateItem"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="15dp"
-            android:text="Create an Item"
-            android:textColor="@android:color/white" />
-
-        <Button
-            android:id="@+id/buttonDeleteDocument"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="15dp"
-            android:text="Delete Document"
-            android:textColor="@android:color/white" />
-
-    </LinearLayout>
 </LinearLayout>

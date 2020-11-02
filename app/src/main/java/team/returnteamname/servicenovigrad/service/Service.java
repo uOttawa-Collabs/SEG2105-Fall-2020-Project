@@ -1,18 +1,17 @@
 package team.returnteamname.servicenovigrad.service;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Map;
 
 public class Service implements Serializable
 {
     private String                name;
-    private Map<String, Document> requiredInformation;
+    private Map<String, Document> requiredInformationMap;
 
-    public Service(String name)
+    public Service(String name, Map<String, Document> requiredInformationMap)
     {
-        this.name           = name;
-        requiredInformation = new HashMap<>();
+        this.name                   = name;
+        this.requiredInformationMap = requiredInformationMap;
     }
 
     public String getName()
@@ -27,16 +26,31 @@ public class Service implements Serializable
 
     public void addRequiredInformation(String key, Document value)
     {
-        requiredInformation.put(key, value);
+        requiredInformationMap.put(key, value);
     }
 
     public Document deleteRequiredInformation(String key)
     {
-        return requiredInformation.remove(key);
+        return requiredInformationMap.remove(key);
     }
 
     public Document getRequiredInformation(String key)
     {
-        return requiredInformation.get(key);
+        return requiredInformationMap.get(key);
+    }
+
+    public Map<String, Document> getRequiredInformationMap()
+    {
+        return requiredInformationMap;
+    }
+
+    public void setRequiredInformationMap(Map<String, Document> requiredInformationMap)
+    {
+        this.requiredInformationMap = requiredInformationMap;
+    }
+
+    public boolean isEmpty()
+    {
+        return requiredInformationMap.isEmpty();
     }
 }
