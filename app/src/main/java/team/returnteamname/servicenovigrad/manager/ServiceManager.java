@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import team.returnteamname.servicenovigrad.account.Account;
 import team.returnteamname.servicenovigrad.account.AdminAccount;
 import team.returnteamname.servicenovigrad.account.UserAccount;
 import team.returnteamname.servicenovigrad.manager.interfaces.IManagerCallback;
@@ -107,12 +108,40 @@ public class ServiceManager
         return initialized;
     }
 
-    public String[] getAllServicesName(AdminAccount account)
+    public String[] getAllServicesName(Account account)
     {
         if (initialized)
         {
             if (ACCOUNT_MANAGER.verifyAccount(account) != null)
                 return availableServices == null ? null : availableServices.toArray(new String[0]);
+            else
+                throw new IllegalArgumentException("Invalid account credential");
+        }
+        else
+            throw new RuntimeException("Service manager is not ready");
+    }
+
+    public HashMap<String, HashMap<String, String>> getAllServiceDocuments(
+        AdminAccount account)
+    {
+        if (initialized)
+        {
+            if (ACCOUNT_MANAGER.verifyAccount(account) != null)
+                return serviceDocuments;
+            else
+                throw new IllegalArgumentException("Invalid account credential");
+        }
+        else
+            throw new RuntimeException("Service manager is not ready");
+    }
+
+    public HashMap<String, HashMap<String, HashMap<String, String>>> getAllServiceDocumentsFormExtra(
+        AdminAccount account)
+    {
+        if (initialized)
+        {
+            if (ACCOUNT_MANAGER.verifyAccount(account) != null)
+                return serviceDocumentsFormExtra;
             else
                 throw new IllegalArgumentException("Invalid account credential");
         }
