@@ -37,7 +37,7 @@ public class DashboardActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
-        DrawerLayout   drawer         = findViewById(R.id.layoutDrawer);
+        DrawerLayout   drawer         = findViewById(R.id.layoutDashboardActivity);
         NavigationView navigationView = findViewById(R.id.drawerNavigationView);
 
         Button buttonOpenDrawer = findViewById(R.id.buttonOpenDrawer);
@@ -151,7 +151,7 @@ public class DashboardActivity extends AppCompatActivity
         {
             try
             {
-                Fragment fragment = (Fragment) fragmentClass.newInstance();
+                Fragment fragment = fragmentClass.newInstance();
 
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("account", account);

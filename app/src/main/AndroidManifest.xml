@@ -11,10 +11,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ServiceNovigrad">
 
-        <activity android:name=".activity.DriverLicenseActivity" />
-
-        <activity android:name=".activity.ServiceActivity" />
-
         <activity
             android:name=".activity.DashboardActivity"
             android:label="Dashboard"

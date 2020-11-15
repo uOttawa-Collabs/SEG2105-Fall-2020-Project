@@ -24,3 +24,4 @@
         app:menu="@menu/activity_dashboard_drawer" />
 
 </androidx.drawerlayout.widget.DrawerLayout>
+
