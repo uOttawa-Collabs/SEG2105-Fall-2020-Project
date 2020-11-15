@@ -8,14 +8,18 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import team.returnteamname.servicenovigrad.account.AdminAccount;
 import team.returnteamname.servicenovigrad.account.UserAccount;
 import team.returnteamname.servicenovigrad.manager.interfaces.IManagerCallback;
 import team.returnteamname.servicenovigrad.service.Service;
+import team.returnteamname.servicenovigrad.service.document.Document;
+import team.returnteamname.servicenovigrad.service.document.FormDocument;
 
 public class ServiceManager
 {
@@ -24,8 +28,11 @@ public class ServiceManager
     private final        FirebaseDatabase              firebaseDatabase = FirebaseDatabase.getInstance();
     private final        Map<String, IManagerCallback> managerCallbacks = new HashMap<>();
     private              AdminAccount                  adminAccount;
-    private              HashMap<String, Service>      availableServices;
-    private              boolean                       initialized      = false;
+
+    private ArrayList<String>                                         availableServices;
+    private HashMap<String, HashMap<String, String>>                  serviceDocuments;
+    private HashMap<String, HashMap<String, HashMap<String, String>>> serviceDocumentsFormExtra;
+    private boolean                                                   initialized = false;
 
     private ServiceManager() {}
 
@@ -48,7 +55,41 @@ public class ServiceManager
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot)
                     {
-                        availableServices = (HashMap<String, Service>) snapshot.getValue();
+                        availableServices = (ArrayList<String>) snapshot.getValue();
+                        checkIfInitialized();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error)
+                    {
+                        throw error.toException();
+                    }
+                });
+
+            reference.child("serviceDocuments").addValueEventListener(
+                new ValueEventListener()
+                {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot)
+                    {
+                        serviceDocuments = (HashMap<String, HashMap<String, String>>) snapshot.getValue();
+                        checkIfInitialized();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error)
+                    {
+                        throw error.toException();
+                    }
+                });
+
+            reference.child("serviceDocumentsFormExtra").addValueEventListener(
+                new ValueEventListener()
+                {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot)
+                    {
+                        serviceDocumentsFormExtra = (HashMap<String, HashMap<String, HashMap<String, String>>>) snapshot.getValue();
                         checkIfInitialized();
                     }
 
@@ -66,14 +107,12 @@ public class ServiceManager
         return initialized;
     }
 
-    public HashMap<String, Service> getAllServices(AdminAccount account)
+    public String[] getAllServicesName(AdminAccount account)
     {
         if (initialized)
         {
             if (ACCOUNT_MANAGER.verifyAccount(account) != null)
-            {
-                return availableServices;
-            }
+                return availableServices == null ? null : availableServices.toArray(new String[0]);
             else
                 throw new IllegalArgumentException("Invalid account credential");
         }
@@ -96,14 +135,46 @@ public class ServiceManager
             throw new RuntimeException("Service manager is not ready");
     }
 
-    public void addService(AdminAccount adminAccount, Service service)
+    public void createService(@NotNull AdminAccount adminAccount, @NotNull Service service)
     {
         if (initialized)
         {
+            DatabaseReference databaseReference = firebaseDatabase.getReference();
+
             if (ACCOUNT_MANAGER.verifyAccount(adminAccount) != null)
             {
-                firebaseDatabase.getReference().child("availableServices").child(
-                    service.getName()).setValue(service);
+                String                serviceName = service.getName();
+                Map<String, Document> documentMap = service.getDocumentMap();
+
+                if (availableServices != null && availableServices.contains(serviceName))
+                    throw new IllegalArgumentException("Service name exists");
+
+                int sid = availableServices == null ? 0 : availableServices.size();
+                databaseReference.child("availableServices").child(Integer.toString(sid)).setValue(
+                    serviceName);
+
+                for (String key : documentMap.keySet())
+                {
+                    Document document = documentMap.get(key);
+
+                    if (document != null)
+                    {
+                        String documentName = document.getName();
+                        String documentType = document.getType();
+
+                        databaseReference.child("serviceDocuments").child(serviceName).child(
+                            documentName).setValue(documentType);
+
+                        if (document instanceof FormDocument)
+                        {
+                            FormDocument        formDocument = (FormDocument) document;
+                            Map<String, String> formMap      = formDocument.getFormMap();
+
+                            databaseReference.child("serviceDocumentsFormExtra").child(
+                                serviceName).child(documentName).setValue(formMap);
+                        }
+                    }
+                }
             }
             else
                 throw new IllegalArgumentException("Invalid administrator credential");
@@ -112,13 +183,21 @@ public class ServiceManager
             throw new RuntimeException("Service manager is not ready");
     }
 
-    public void deleteService(AdminAccount adminAccount, String name)
+    public void deleteService(@NotNull AdminAccount adminAccount, @NotNull String name)
     {
         if (initialized)
         {
             if (ACCOUNT_MANAGER.verifyAccount(adminAccount) != null)
             {
+                if (!availableServices.contains(name))
+                    throw new IllegalArgumentException("Service name does not exist");
+
+                int sid = availableServices.indexOf(name);
+
                 firebaseDatabase.getReference().child("availableServices").child(
+                    Integer.toString(sid)).removeValue();
+                firebaseDatabase.getReference().child("serviceDocuments").child(name).removeValue();
+                firebaseDatabase.getReference().child("serviceDocumentsFormExtra").child(
                     name).removeValue();
 
                 // TODO: May affect branches that was assigned to the deleted service. Need to modify this method during phase 3.
@@ -142,7 +221,7 @@ public class ServiceManager
 
     synchronized private void checkIfInitialized()
     {
-        initialized = availableServices != null;
+        initialized = ACCOUNT_MANAGER.isInitialized();
 
         if (initialized)
         {

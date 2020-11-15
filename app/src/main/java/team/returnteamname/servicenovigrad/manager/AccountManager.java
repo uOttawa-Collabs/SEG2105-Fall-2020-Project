@@ -298,9 +298,12 @@ public class AccountManager
                 String password = shadow.get(account.getUsername());
                 if (password != null && password.equals(account.getPassword()))
                 {
-                    account.setRole(roles.get(account.getUsername()));
+                    String role = roles.get(account.getUsername());
 
-                    switch (account.getRole())
+                    if (role == null)
+                        throw new IllegalArgumentException("Unknown account role");
+
+                    switch (role)
                     {
                         case "Administrator":
                             return adminAccount;
@@ -308,7 +311,7 @@ public class AccountManager
                             return new EmployeeAccount(
                                 account.getUsername(),
                                 account.getPassword(),
-                                account.getRole(),
+                                role,
                                 Objects.requireNonNull(names.get(account.getUsername())).get(
                                     "firstName"),
                                 Objects.requireNonNull(names.get(account.getUsername())).get(
@@ -318,7 +321,7 @@ public class AccountManager
                             return new CustomerAccount(
                                 account.getUsername(),
                                 account.getPassword(),
-                                account.getRole(),
+                                role,
                                 Objects.requireNonNull(names.get(account.getUsername())).get(
                                     "firstName"),
                                 Objects.requireNonNull(names.get(account.getUsername())).get(

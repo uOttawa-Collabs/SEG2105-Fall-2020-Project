@@ -16,12 +16,10 @@ import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import team.returnteamname.servicenovigrad.R;
 import team.returnteamname.servicenovigrad.account.AdminAccount;
 import team.returnteamname.servicenovigrad.manager.ServiceManager;
-import team.returnteamname.servicenovigrad.service.Service;
 
 public class AdminDeleteServiceFragment extends Fragment
 {
@@ -44,13 +42,16 @@ public class AdminDeleteServiceFragment extends Fragment
             AdminAccount account = (AdminAccount) bundle.getSerializable("account");
             try
             {
-                Map<String, Service> serviceMap      = serviceManager.getAllServices(account);
-                List<String>         serviceNameList = new ArrayList<>();
+                String[]     serviceNames    = serviceManager.getAllServicesName(account);
+                List<String> serviceNameList = new ArrayList<>();
 
-                for (String serviceName : serviceMap.keySet())
+                if (serviceNames != null)
                 {
-                    if (serviceName != null)
-                        serviceNameList.add(serviceName);
+                    for (String serviceName : serviceNames)
+                    {
+                        if (serviceName != null)
+                            serviceNameList.add(serviceName);
+                    }
                 }
 
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(

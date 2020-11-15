@@ -24,35 +24,6 @@
         android:layout_marginVertical="20dp"
         android:gravity="center">
 
-        <TableRow
-            android:id="@+id/tableRow"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center">
-            <EditText
-                android:id="@+id/editTextItem"
-                android:layout_width="110dp"
-                android:layout_height="wrap_content"
-                android:autofillHints="Item"
-                android:gravity="center"
-                android:hint="Item"
-                android:inputType="textNoSuggestions" />
-            <EditText
-                android:id="@+id/editTextRegex"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:autofillHints="Regex"
-                android:gravity="center"
-                android:hint="Regular expression"
-                android:inputType="textNoSuggestions" />
-            <Button
-                android:id="@+id/buttonDeleteItem"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Delete"
-                android:textColor="@android:color/white" />
-        </TableRow>
-
     </TableLayout>
 
     <LinearLayout

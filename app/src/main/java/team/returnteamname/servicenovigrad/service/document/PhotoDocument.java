@@ -1,4 +1,4 @@
-package team.returnteamname.servicenovigrad.service;
+package team.returnteamname.servicenovigrad.service.document;
 
 public class PhotoDocument extends Document
 {

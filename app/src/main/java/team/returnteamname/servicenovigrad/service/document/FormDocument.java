@@ -1,16 +1,21 @@
-package team.returnteamname.servicenovigrad.service;
+package team.returnteamname.servicenovigrad.service.document;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class FormDocument extends Document
 {
-    private Map<String, String> formMap;
+    private final Map<String, String> formMap;
 
     public FormDocument(String name, String type)
     {
         super(name, type);
         formMap = new HashMap<>();
+    }
+
+    public Map<String, String> getFormMap()
+    {
+        return formMap;
     }
 
     public void addFormItem(String key, String value)
