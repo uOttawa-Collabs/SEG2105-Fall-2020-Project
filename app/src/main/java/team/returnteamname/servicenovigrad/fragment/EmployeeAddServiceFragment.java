@@ -39,8 +39,6 @@ public class EmployeeAddServiceFragment extends Fragment
 {
     private final        FirebaseDatabase              firebaseDatabase = FirebaseDatabase.getInstance();
     private ArrayList<String>                                         availableServices;
-    private static final AccountManager                ACCOUNT_MANAGER  = AccountManager.getInstance();
-    private EmployeeAccount employeeAccount;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -55,7 +53,6 @@ public class EmployeeAddServiceFragment extends Fragment
         EditText editTextService = view.findViewById(R.id.editTextService);
         Button   buttonAdd    = view.findViewById(R.id.buttonAdd);
 
-        employeeAccount = ACCOUNT_MANAGER.getEmployeeAccount();
 
         DatabaseReference reference = firebaseDatabase.getReference();
         reference.child("availableServices").addValueEventListener(
@@ -122,7 +119,7 @@ public class EmployeeAddServiceFragment extends Fragment
                         try
                         {
                             databaseReference.child("branchServices").child(serviceName).setValue(
-                                employeeAccount.getName());
+                                account.getUsername());
                             Toast.makeText(getContext(), "Success", Toast.LENGTH_SHORT).show();
                         }
                         catch (Exception e)
