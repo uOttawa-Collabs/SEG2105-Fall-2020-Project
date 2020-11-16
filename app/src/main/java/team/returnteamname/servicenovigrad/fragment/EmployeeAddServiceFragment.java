@@ -118,8 +118,10 @@ public class EmployeeAddServiceFragment extends Fragment
 
                         try
                         {
-                            databaseReference.child("branchServices").child(serviceName).setValue(
+                            databaseReference.child("branchServices").child(serviceName).child(account.getUsername().toString()).setValue(
                                 account.getUsername());
+                            databaseReference.child("employeeServices").child(account.getUsername()).child(serviceName).setValue(
+                                serviceName);
                             Toast.makeText(getContext(), "Success", Toast.LENGTH_SHORT).show();
                         }
                         catch (Exception e)
