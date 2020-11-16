@@ -24,6 +24,7 @@ import team.returnteamname.servicenovigrad.fragment.AdminDeleteAccountFragment;
 import team.returnteamname.servicenovigrad.fragment.AdminDeleteServiceFragment;
 import team.returnteamname.servicenovigrad.fragment.EmployeeAddServiceFragment;
 import team.returnteamname.servicenovigrad.fragment.EmployeeDeleteServiceFragment;
+import team.returnteamname.servicenovigrad.fragment.EmployeeEditWorkingHours;
 import team.returnteamname.servicenovigrad.fragment.HomeFragment;
 
 public class DashboardActivity extends AppCompatActivity
@@ -35,6 +36,8 @@ public class DashboardActivity extends AppCompatActivity
 
     private static final int EMPLOYEE_CREATE_SERVICE = 4;
     private static final int EMPLOYEE_DELETE_SERVICE = 5;
+    private static final int EMPLOYEE_EDIT_WORKING_HOURS = 6;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -83,6 +86,7 @@ public class DashboardActivity extends AppCompatActivity
             case "Employee":
                 menu.add(Menu.NONE, EMPLOYEE_CREATE_SERVICE, Menu.NONE, "Add a service");
                 menu.add(Menu.NONE, EMPLOYEE_DELETE_SERVICE, Menu.NONE, "Delete a service");
+                menu.add(Menu.NONE, EMPLOYEE_EDIT_WORKING_HOURS, Menu.NONE, "Edit working hours");
                 break;
             case "Customer":
                 break;
@@ -132,6 +136,9 @@ public class DashboardActivity extends AppCompatActivity
                         break;
                     case EMPLOYEE_DELETE_SERVICE:
                         fragmentClass = EmployeeDeleteServiceFragment.class;
+                        break;
+                    case EMPLOYEE_EDIT_WORKING_HOURS:
+                        fragmentClass = EmployeeEditWorkingHours.class;
                         break;
                     default:
                         fragmentClass = HomeFragment.class;
