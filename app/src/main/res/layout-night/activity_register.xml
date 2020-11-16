@@ -51,7 +51,7 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <FrameLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -61,6 +61,6 @@
 
         <include layout="@layout/layout_register_form" />
 
-    </FrameLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
