@@ -1,10 +1,10 @@
 package team.returnteamname.servicenovigrad.fragment;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
@@ -12,20 +12,19 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
-import java.util.List;
 
 import team.returnteamname.servicenovigrad.R;
 import team.returnteamname.servicenovigrad.account.EmployeeAccount;
-import team.returnteamname.servicenovigrad.manager.ServiceManager;
 
 public class EmployeeEditWorkingHours extends Fragment
 {
@@ -53,6 +52,7 @@ public class EmployeeEditWorkingHours extends Fragment
             try
             {
                 calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+                            @RequiresApi(api = Build.VERSION_CODES.O)
                             @Override
                             public void onSelectedDayChange(
                                 @NonNull CalendarView view,
@@ -60,6 +60,7 @@ public class EmployeeEditWorkingHours extends Fragment
                                 int month,
                                 int dayOfMonth)
                             {
+
                                 String Date = year + "-" + (month + 1) + "-" + dayOfMonth;
 
 
@@ -73,11 +74,44 @@ public class EmployeeEditWorkingHours extends Fragment
                         DatabaseReference databaseReference   = firebaseDatabase.getReference();
                         try
                         {
-                            databaseReference.child("branchWorkingHours").child(
-                                account.getUsername().toString()).child(editTextSelectedDate.getText().toString()).setValue(editTextStartTime.getText().toString().trim()+"-"+editTextEndTime.getText().toString().trim());
 
-                            Toast.makeText(getContext(), "Success",
-                                           Toast.LENGTH_SHORT).show();
+
+                            if(editTextEndTime == null || editTextStartTime == null){
+                                Toast.makeText(getContext(), "All fields should be entered", Toast.LENGTH_SHORT).show();
+                            }else if (editTextEndTime != null && editTextStartTime != null){
+                                String startTime = editTextStartTime.getText().toString().trim();
+                                String endTime = editTextEndTime.getText().toString().trim();
+
+
+
+                                String[] startTimeSplit = startTime.split(":");
+                                String[] endTimeSplit = endTime.split(":");
+
+                                int startHour = Integer.parseInt(startTimeSplit[0]);
+                                int startMin = Integer.parseInt(startTimeSplit[1]);
+                                int endHour = Integer.parseInt(endTimeSplit[0]);
+                                int endMin = Integer.parseInt(endTimeSplit[1]);
+
+
+
+                                if(startHour > 24 || startMin > 60 || endHour >24 || endMin > 60 ||
+                                   startHour<0 || startMin<0 || endHour<0 || endMin<0){
+                                    Toast.makeText(getContext(), "Please enter a valid time", Toast.LENGTH_SHORT).show();
+                                }else if (startHour > endHour || ((startHour == endHour )&& (startMin>endMin))){
+                                    Toast.makeText(getContext(), "Your end time should be bigger than start time", Toast.LENGTH_SHORT).show();
+                                }
+                                else{
+                                    databaseReference.child("branchWorkingHours").child(
+                                        account.getUsername().toString()).child(editTextSelectedDate.getText().toString()).setValue(startTime+"-"+endTime);
+
+                                    Toast.makeText(getContext(), "Success",
+                                                   Toast.LENGTH_SHORT).show();
+                                }
+
+                            }else{
+                                Toast.makeText(getContext(), "Unkown error, please reenter your time", Toast.LENGTH_SHORT).show();
+                            }
+
                                 }
                                 catch (Exception e)
                                 {
