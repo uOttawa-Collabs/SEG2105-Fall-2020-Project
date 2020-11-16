@@ -17,4 +17,9 @@ public class EmployeeAccount extends UserAccount
     {
         super(username, password, role, firstName, lastName, email);
     }
+
+    public String getName()
+    {
+        return firstName+" "+lastName;
+    }
 }

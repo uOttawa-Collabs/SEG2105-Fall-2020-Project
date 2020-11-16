@@ -25,6 +25,7 @@ public class AccountManager
     private static final AccountManager   INSTANCE         = new AccountManager();
     private final        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private              AdminAccount     adminAccount;
+    private              EmployeeAccount  employeeAccount;
 
     private ArrayList<String>                        accounts;
     private ArrayList<String>                        availableRoles;
@@ -177,6 +178,15 @@ public class AccountManager
         if (initialized)
         {
             return adminAccount;
+        }
+        else
+            throw new RuntimeException("Account manager is not ready");
+    }
+
+    public EmployeeAccount getEmployeeAccount(){
+        if (initialized)
+        {
+            return employeeAccount;
         }
         else
             throw new RuntimeException("Account manager is not ready");
