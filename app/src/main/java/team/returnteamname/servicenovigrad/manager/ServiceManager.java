@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import team.returnteamname.servicenovigrad.account.Account;
 import team.returnteamname.servicenovigrad.account.AdminAccount;
@@ -35,6 +36,7 @@ public class ServiceManager
     private HashMap<String, HashMap<String, HashMap<String, String>>> serviceDocumentsFormExtra;
     private boolean                                                   initialized = false;
 
+
     private ServiceManager() {}
 
     public static ServiceManager getInstance()
@@ -50,6 +52,7 @@ public class ServiceManager
             adminAccount = ACCOUNT_MANAGER.getAdminAccount();
 
             DatabaseReference reference = firebaseDatabase.getReference();
+
             reference.child("availableServices").addValueEventListener(
                 new ValueEventListener()
                 {
@@ -113,6 +116,7 @@ public class ServiceManager
         if (initialized)
         {
             if (ACCOUNT_MANAGER.verifyAccount(account) != null)
+
                 return availableServices == null ? null : availableServices.toArray(new String[0]);
             else
                 throw new IllegalArgumentException("Invalid account credential");

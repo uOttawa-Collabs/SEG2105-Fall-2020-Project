@@ -8,6 +8,7 @@ import android.widget.Button;
 import team.returnteamname.servicenovigrad.R;
 import team.returnteamname.servicenovigrad.manager.AccountManager;
 import team.returnteamname.servicenovigrad.manager.ServiceManager;
+import team.returnteamname.servicenovigrad.manager.BranchManager;
 
 public class MainActivity extends Activity
 {
@@ -51,6 +52,13 @@ public class MainActivity extends Activity
                                           () ->
                                           {
                                               ServiceManager.getInstance().initialize();
+                                          });
+
+        // Initialize BranchManager after initialization of AccountManager
+        accountManager.addManagerCallback("initializeBranchManager",
+                                          () ->
+                                          {
+                                              BranchManager.getInstance().initialize();
                                           });
     }
 }

@@ -27,7 +27,7 @@ import java.util.Map;
 
 import team.returnteamname.servicenovigrad.R;
 import team.returnteamname.servicenovigrad.account.EmployeeAccount;
-import team.returnteamname.servicenovigrad.manager.ServiceManager;
+import team.returnteamname.servicenovigrad.manager.BranchManager;
 import team.returnteamname.servicenovigrad.manager.AccountManager;
 import team.returnteamname.servicenovigrad.service.Service;
 
@@ -43,8 +43,8 @@ public class EmployeeDeleteServiceFragment extends Fragment
     {
         View view = inflater.inflate(R.layout.fragment_employee_delete_service,
                                      container, false);
-        Bundle         bundle         = getArguments();
-        ServiceManager serviceManager = ServiceManager.getInstance();
+        Bundle         bundle        = getArguments();
+        BranchManager branchManager = BranchManager.getInstance();
 
         ListView listViewService = view.findViewById(R.id.listViewService);
         EditText editTextService = view.findViewById(R.id.editTextService);
@@ -55,7 +55,7 @@ public class EmployeeDeleteServiceFragment extends Fragment
             EmployeeAccount account = (EmployeeAccount) bundle.getSerializable("account");
             try
             {
-                String[]     serviceNames    = serviceManager.getAllServicesName(account);
+                String[]     serviceNames    = branchManager.getBranchServicesName(account);
                 List<String> serviceNameList = new ArrayList<>();
 
                 if (serviceNames != null)
@@ -98,6 +98,9 @@ public class EmployeeDeleteServiceFragment extends Fragment
                         {
                             databaseReference.child("branchServices").child(serviceName).child(account.getUsername().toString()).removeValue();
                             databaseReference.child("employeeServices").child(account.getUsername()).child(serviceName).removeValue();
+
+                            editTextService.setText("");
+                            adapter.remove(serviceName);
                             Toast.makeText(getContext(), "Success", Toast.LENGTH_SHORT).show();
                         }
                         catch (Exception e)
