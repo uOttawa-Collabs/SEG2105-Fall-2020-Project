@@ -26,15 +26,15 @@ import team.returnteamname.servicenovigrad.service.document.FormDocument;
 
 public class BranchManager
 {
-    private static final BranchManager                INSTANCE         = new BranchManager();
+    private static final BranchManager                 INSTANCE         = new BranchManager();
     private static final AccountManager                ACCOUNT_MANAGER  = AccountManager.getInstance();
     private final        FirebaseDatabase              firebaseDatabase = FirebaseDatabase.getInstance();
     private final        Map<String, IManagerCallback> managerCallbacks = new HashMap<>();
 
     private ArrayList<String>                                         branchServices;
+    private ArrayList<String>                                         availableServices;
     private boolean                                                   initialized = false;
     private HashMap<String, HashMap<String, String>>                  namesAndServices;
-
 
     private BranchManager() {}
 
@@ -67,6 +67,22 @@ public class BranchManager
                     }
                 });
 
+            reference.child("availableServices").addValueEventListener(
+                new ValueEventListener()
+                {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot)
+                    {
+                        availableServices = (ArrayList<String>) snapshot.getValue();
+                        checkIfInitialized();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error)
+                    {
+                        throw error.toException();
+                    }
+                });
         }
     }
 
@@ -95,8 +111,21 @@ public class BranchManager
                 throw new IllegalArgumentException("Invalid account credential");
         }
         else
-            System.out.println("heihei");
             throw new RuntimeException("Branch manager is not ready");
+    }
+
+    public String[] getAllServicesName(Account account)
+    {
+        if (initialized)
+        {
+            if (ACCOUNT_MANAGER.verifyAccount(account) != null)
+
+                return availableServices == null ? null : availableServices.toArray(new String[0]);
+            else
+                throw new IllegalArgumentException("Invalid account credential");
+        }
+        else
+            throw new RuntimeException("Service manager is not ready");
     }
 
     public Service[] getAccountServices(UserAccount account, String branchName)
@@ -111,7 +140,7 @@ public class BranchManager
                 throw new IllegalArgumentException("Invalid account credential");
         }
         else
-            throw new RuntimeException("Service manager is not ready");
+            throw new RuntimeException("Branch manager is not ready");
     }
 
     public void removeManagerCallback(String identifier)

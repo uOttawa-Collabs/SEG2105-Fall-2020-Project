@@ -21,16 +21,19 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import team.returnteamname.servicenovigrad.R;
 import team.returnteamname.servicenovigrad.account.AdminAccount;
 import team.returnteamname.servicenovigrad.account.EmployeeAccount;
 
 import team.returnteamname.servicenovigrad.manager.AccountManager;
-
+import team.returnteamname.servicenovigrad.manager.BranchManager;
 import team.returnteamname.servicenovigrad.manager.ServiceManager;
 import team.returnteamname.servicenovigrad.service.Service;
 import team.returnteamname.servicenovigrad.service.document.Document;
@@ -47,39 +50,46 @@ public class EmployeeAddServiceFragment extends Fragment
         View view = inflater.inflate(R.layout.fragment_employee_add_service,
                                      container, false);
         Bundle         bundle         = getArguments();
-        ServiceManager serviceManager = ServiceManager.getInstance();
+        BranchManager branchManager = BranchManager.getInstance();
 
         ListView listViewService = view.findViewById(R.id.listViewService);
         EditText editTextService = view.findViewById(R.id.editTextService);
         Button   buttonAdd    = view.findViewById(R.id.buttonAdd);
 
 
-        DatabaseReference reference = firebaseDatabase.getReference();
-        reference.child("availableServices").addValueEventListener(
-            new ValueEventListener()
-            {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot)
-                {
-                    availableServices = (ArrayList<String>) snapshot.getValue();
-
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error)
-                {
-                    throw error.toException();
-                }
-            });
-
         if (bundle != null)
         {
             EmployeeAccount account = (EmployeeAccount) bundle.getSerializable("account");
             try
             {
-                String[]     serviceNames    = serviceManager.getAllServicesName(account);
-                List<String> serviceNameList = new ArrayList<>();
+                String[]     allServiceName = branchManager.getAllServicesName(account);
+                String[]     branchServiceName = branchManager.getBranchServicesName(account);
 
+                ArrayList<String> allServiceNameList = new ArrayList<>(Arrays.asList(allServiceName));
+                ArrayList<String> branchServiceNameList = new ArrayList<>(Arrays.asList(branchServiceName));
+                ArrayList<String> serviceNamesList = new ArrayList<>();
+
+                for(int i=1; i < allServiceNameList.size(); i++)
+                {
+                    boolean flag = false;
+                    for(int j=0; j<branchServiceNameList.size(); j++)
+                    {
+                        if(allServiceNameList.get(i).equals(branchServiceNameList.get(j)))
+                        {
+                            flag = true;
+                            break;
+                        }
+                    }
+
+                    if(flag == false)
+                    {
+                        serviceNamesList.add(allServiceNameList.get(i));
+                    }
+                }
+
+                String[]     serviceNames    = (String[]) serviceNamesList.toArray(new String[0]);
+                List<String> serviceNameList = new ArrayList<>();
+                
                 if (serviceNames != null)
                 {
                     for (String serviceName : serviceNames)
@@ -87,6 +97,11 @@ public class EmployeeAddServiceFragment extends Fragment
                         if (serviceName != null)
                             serviceNameList.add(serviceName);
                     }
+                }
+
+                if(serviceNamesList.size() == 0)
+                {
+                    Toast.makeText(getContext(), "No New Service Can Be Added", Toast.LENGTH_SHORT).show();
                 }
 
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(
@@ -122,6 +137,9 @@ public class EmployeeAddServiceFragment extends Fragment
                                 account.getUsername());
                             databaseReference.child("employeeServices").child(account.getUsername()).child(serviceName).setValue(
                                 serviceName);
+
+                            editTextService.setText("");
+                            adapter.remove(serviceName);
                             Toast.makeText(getContext(), "Success", Toast.LENGTH_SHORT).show();
                         }
                         catch (Exception e)
