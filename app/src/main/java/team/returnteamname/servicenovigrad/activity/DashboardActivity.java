@@ -90,7 +90,6 @@ public class DashboardActivity extends AppCompatActivity
                 menu.add(Menu.NONE, EMPLOYEE_DELETE_SERVICE, Menu.NONE, "Delete a service");
                 menu.add(Menu.NONE, EMPLOYEE_EDIT_WORKING_HOURS, Menu.NONE, "Edit working hours");
                 menu.add(Menu.NONE, EMPLOYEE_PROCESS_SERVICE, Menu.NONE, "View service requests");
-
                 break;
             case "Customer":
                 break;
@@ -146,6 +145,7 @@ public class DashboardActivity extends AppCompatActivity
                         break;
                     case EMPLOYEE_PROCESS_SERVICE:
                         fragmentClass = EmployeeProcessServiceRequest.class;
+                        break;
                     default:
                         fragmentClass = HomeFragment.class;
                         break;

@@ -8,21 +8,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 import team.returnteamname.servicenovigrad.account.Account;
 import team.returnteamname.servicenovigrad.account.AdminAccount;
 import team.returnteamname.servicenovigrad.account.EmployeeAccount;
-import team.returnteamname.servicenovigrad.account.UserAccount;
 import team.returnteamname.servicenovigrad.manager.interfaces.IManagerCallback;
-import team.returnteamname.servicenovigrad.service.Service;
-import team.returnteamname.servicenovigrad.service.document.Document;
-import team.returnteamname.servicenovigrad.service.document.FormDocument;
 
 public class BranchManager
 {
@@ -31,10 +23,9 @@ public class BranchManager
     private final        FirebaseDatabase              firebaseDatabase = FirebaseDatabase.getInstance();
     private final        Map<String, IManagerCallback> managerCallbacks = new HashMap<>();
 
-    private ArrayList<String>                                         branchServices;
-    private ArrayList<String>                                         availableServices;
-    private boolean                                                   initialized = false;
-    private HashMap<String, HashMap<String, String>>                  namesAndServices;
+    private boolean                                  initialized = false;
+    private HashMap<String, HashMap<String, String>> employeeServices;
+    private HashMap<String, HashMap<String, String>> branchWorkingHours;
 
     private BranchManager() {}
 
@@ -56,7 +47,7 @@ public class BranchManager
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot)
                     {
-                        namesAndServices = (HashMap<String, HashMap<String, String>>) snapshot.getValue();
+                        employeeServices = (HashMap<String, HashMap<String, String>>) snapshot.getValue();
                         checkIfInitialized();
                     }
 
@@ -67,13 +58,13 @@ public class BranchManager
                     }
                 });
 
-            reference.child("availableServices").addValueEventListener(
+            reference.child("branchWorkingHours").addValueEventListener(
                 new ValueEventListener()
                 {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot)
                     {
-                        availableServices = (ArrayList<String>) snapshot.getValue();
+                        branchWorkingHours = (HashMap<String, HashMap<String, String>>) snapshot.getValue();
                         checkIfInitialized();
                     }
 
@@ -83,6 +74,7 @@ public class BranchManager
                         throw error.toException();
                     }
                 });
+
         }
     }
 
@@ -91,21 +83,13 @@ public class BranchManager
         return initialized;
     }
 
-    public String[] getBranchServicesName(Account account)
+    public HashMap<String, HashMap<String, String>> getAllEmployeeServices(AdminAccount account)
     {
         if (initialized)
         {
             if (ACCOUNT_MANAGER.verifyAccount(account) != null)
             {
-                Map<String, String> branchServiceName = new HashMap<String, String>();
-                branchServiceName = namesAndServices.get(account.getUsername());
-                branchServices = new ArrayList<String>();
-                for(String key: branchServiceName.keySet())
-                {
-                    String value = branchServiceName.get(key);
-                    branchServices.add(value);
-                }
-                return branchServices == null ? null : branchServices.toArray(new String[0]);
+                return employeeServices;
             }
             else
                 throw new IllegalArgumentException("Invalid account credential");
@@ -114,27 +98,83 @@ public class BranchManager
             throw new RuntimeException("Branch manager is not ready");
     }
 
-    public String[] getAllServicesName(Account account)
-    {
-        if (initialized)
-        {
-            if (ACCOUNT_MANAGER.verifyAccount(account) != null)
-
-                return availableServices == null ? null : availableServices.toArray(new String[0]);
-            else
-                throw new IllegalArgumentException("Invalid account credential");
-        }
-        else
-            throw new RuntimeException("Service manager is not ready");
-    }
-
-    public Service[] getAccountServices(UserAccount account, String branchName)
+    public String[] getEmployeeServices(EmployeeAccount account)
     {
         if (initialized)
         {
             if (ACCOUNT_MANAGER.verifyAccount(account) != null)
             {
-                throw new IllegalArgumentException("Not implemented yet"); // TODO
+                String              name = account.getUsername();
+                Map<String, String> map  = employeeServices.get(name);
+                if (map != null)
+                    return map.keySet().toArray(new String[0]);
+                else
+                    return null;
+            }
+            else
+                throw new IllegalArgumentException("Invalid account credential");
+        }
+        else
+            throw new RuntimeException("Branch manager is not ready");
+    }
+
+    public String[] getEmployeeServicesByUsername(Account account, String username)
+    {
+        if (initialized)
+        {
+            if (ACCOUNT_MANAGER.verifyAccount(account) != null)
+            {
+                Map<String, String> map = employeeServices.get(username);
+                if (map != null)
+                    return map.keySet().toArray(new String[0]);
+                else
+                    return null;
+            }
+            else
+                throw new IllegalArgumentException("Invalid account credential");
+        }
+        else
+            throw new RuntimeException("Branch manager is not ready");
+    }
+
+    public HashMap<String, HashMap<String, String>> getAllEmployeeWorkingHours(AdminAccount account)
+    {
+        if (initialized)
+        {
+            if (ACCOUNT_MANAGER.verifyAccount(account) != null)
+            {
+                return branchWorkingHours;
+            }
+            else
+                throw new IllegalArgumentException("Invalid account credential");
+        }
+        else
+            throw new RuntimeException("Branch manager is not ready");
+    }
+
+    public HashMap<String, String> getBranchWorkingHours(EmployeeAccount account)
+    {
+        if (initialized)
+        {
+            if (ACCOUNT_MANAGER.verifyAccount(account) != null)
+            {
+                String name = account.getUsername();
+                return employeeServices.get(name);
+            }
+            else
+                throw new IllegalArgumentException("Invalid account credential");
+        }
+        else
+            throw new RuntimeException("Branch manager is not ready");
+    }
+
+    public HashMap<String, String> getBranchWorkingHoursByUsername(Account account, String username)
+    {
+        if (initialized)
+        {
+            if (ACCOUNT_MANAGER.verifyAccount(account) != null)
+            {
+                return employeeServices.get(username);
             }
             else
                 throw new IllegalArgumentException("Invalid account credential");

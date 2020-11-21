@@ -14,27 +14,19 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import team.returnteamname.servicenovigrad.R;
 import team.returnteamname.servicenovigrad.account.EmployeeAccount;
 import team.returnteamname.servicenovigrad.manager.BranchManager;
-import team.returnteamname.servicenovigrad.manager.AccountManager;
-import team.returnteamname.servicenovigrad.service.Service;
 
 public class EmployeeDeleteServiceFragment extends Fragment
 {
     private final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-    private ArrayList<String> availableServices;
 
     @Nullable
     @Override
@@ -55,7 +47,7 @@ public class EmployeeDeleteServiceFragment extends Fragment
             EmployeeAccount account = (EmployeeAccount) bundle.getSerializable("account");
             try
             {
-                String[]     serviceNames    = branchManager.getBranchServicesName(account);
+                String[]     serviceNames    = branchManager.getEmployeeServices(account);
                 List<String> serviceNameList = new ArrayList<>();
 
                 if (serviceNames != null)
@@ -81,7 +73,6 @@ public class EmployeeDeleteServiceFragment extends Fragment
                 buttonDelete.setOnClickListener(
                     v ->
                     {
-                        int sid = availableServices == null ? 0 : availableServices.size();
                         CharSequence serviceNameSequence = editTextService.getText();
                         String       serviceName;
                         DatabaseReference databaseReference = firebaseDatabase.getReference();
@@ -96,8 +87,10 @@ public class EmployeeDeleteServiceFragment extends Fragment
 
                         try
                         {
-                            databaseReference.child("branchServices").child(serviceName).child(account.getUsername().toString()).removeValue();
-                            databaseReference.child("employeeServices").child(account.getUsername()).child(serviceName).removeValue();
+                            databaseReference.child("branchServices").child(serviceName).child(
+                                account.getUsername()).removeValue();
+                            databaseReference.child("employeeServices").child(
+                                account.getUsername()).child(serviceName).removeValue();
 
                             editTextService.setText("");
                             adapter.remove(serviceName);

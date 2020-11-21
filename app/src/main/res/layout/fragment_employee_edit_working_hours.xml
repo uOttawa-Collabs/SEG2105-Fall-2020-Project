@@ -1,90 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_marginVertical="20dp">
+
+    <TextView
+        android:id="@+id/textViewHintForDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Please select a date and continue"
+        app:layout_constraintBottom_toTopOf="@id/calendarView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <CalendarView
         android:id="@+id/calendarView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="70dp"
-        app:layout_constraintBottom_toTopOf="@+id/editTextSelectedDate"
+        app:layout_constraintBottom_toTopOf="@id/editTextSelectedDate"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/textViewHintForDate" />
 
     <EditText
         android:id="@+id/editTextSelectedDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
         android:ems="10"
         android:inputType="date"
-        android:hint="yyyy-mm-dd"
-        app:layout_constraintBottom_toTopOf="@+id/editTextStartTime"
+        android:hint="Date (yyyy-mm-dd)"
+        app:layout_constraintBottom_toTopOf="@id/editTextStartTime"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.452"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/calendarView" />
+        app:layout_constraintTop_toBottomOf="@id/calendarView" />
 
     <EditText
         android:id="@+id/editTextStartTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="1dp"
-        android:layout_marginBottom="1dp"
         android:ems="10"
         android:inputType="time"
-        android:hint="Start time  hh:mm"
-        app:layout_constraintBottom_toTopOf="@+id/editTextEndTime"
+        android:hint="Start time (hh:mm)"
+        app:layout_constraintBottom_toTopOf="@id/editTextEndTime"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.452"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextSelectedDate" />
+        app:layout_constraintTop_toBottomOf="@id/editTextSelectedDate" />
 
     <EditText
         android:id="@+id/editTextEndTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="7dp"
-        android:layout_marginBottom="29dp"
         android:ems="10"
         android:inputType="time"
-        android:hint="End time    hh:mm"
-        app:layout_constraintBottom_toTopOf="@+id/buttonSubmit"
+        android:hint="End time (hh:mm)"
+        app:layout_constraintBottom_toTopOf="@id/buttonSubmit"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.452"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextStartTime" />
+        app:layout_constraintTop_toBottomOf="@id/editTextStartTime" />
 
     <Button
         android:id="@+id/buttonSubmit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="70dp"
-        android:text="SUBMIT"
+        android:text="Submit"
+        android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextEndTime" />
+        app:layout_constraintTop_toBottomOf="@id/editTextEndTime" />
 
-    <TextView
-        android:id="@+id/textViewHintForDate"
-        android:layout_width="284dp"
-        android:layout_height="27dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="45dp"
-        android:layout_marginEnd="95dp"
-        android:layout_marginBottom="1dp"
-        android:text="Please select a date and continue"
-        app:layout_constraintBottom_toTopOf="@+id/calendarView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
