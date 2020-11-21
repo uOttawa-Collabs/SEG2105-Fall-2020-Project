@@ -24,7 +24,8 @@
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:ems="10"
-        android:inputType="time"
+        android:inputType="date"
+        android:hint="yyyy-mm-dd"
         app:layout_constraintBottom_toTopOf="@+id/editTextStartTime"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.452"
@@ -39,6 +40,7 @@
         android:layout_marginBottom="1dp"
         android:ems="10"
         android:inputType="time"
+        android:hint="Start time  hh:mm"
         app:layout_constraintBottom_toTopOf="@+id/editTextEndTime"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.452"
@@ -53,6 +55,7 @@
         android:layout_marginBottom="29dp"
         android:ems="10"
         android:inputType="time"
+        android:hint="End time    hh:mm"
         app:layout_constraintBottom_toTopOf="@+id/buttonSubmit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.452"
@@ -70,4 +73,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextEndTime" />
+
+    <TextView
+        android:id="@+id/textViewHintForDate"
+        android:layout_width="284dp"
+        android:layout_height="27dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="45dp"
+        android:layout_marginEnd="95dp"
+        android:layout_marginBottom="1dp"
+        android:text="Please select a date and continue"
+        app:layout_constraintBottom_toTopOf="@+id/calendarView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
