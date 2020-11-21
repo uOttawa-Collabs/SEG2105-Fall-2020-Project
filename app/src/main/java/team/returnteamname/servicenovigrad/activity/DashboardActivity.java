@@ -25,6 +25,7 @@ import team.returnteamname.servicenovigrad.fragment.AdminDeleteServiceFragment;
 import team.returnteamname.servicenovigrad.fragment.EmployeeAddServiceFragment;
 import team.returnteamname.servicenovigrad.fragment.EmployeeDeleteServiceFragment;
 import team.returnteamname.servicenovigrad.fragment.EmployeeEditWorkingHours;
+import team.returnteamname.servicenovigrad.fragment.EmployeeProcessServiceRequest;
 import team.returnteamname.servicenovigrad.fragment.HomeFragment;
 
 public class DashboardActivity extends AppCompatActivity
@@ -37,6 +38,7 @@ public class DashboardActivity extends AppCompatActivity
     private static final int EMPLOYEE_CREATE_SERVICE = 4;
     private static final int EMPLOYEE_DELETE_SERVICE = 5;
     private static final int EMPLOYEE_EDIT_WORKING_HOURS = 6;
+    private static final int EMPLOYEE_PROCESS_SERVICE = 7;
 
 
     @Override
@@ -87,6 +89,8 @@ public class DashboardActivity extends AppCompatActivity
                 menu.add(Menu.NONE, EMPLOYEE_CREATE_SERVICE, Menu.NONE, "Add a service");
                 menu.add(Menu.NONE, EMPLOYEE_DELETE_SERVICE, Menu.NONE, "Delete a service");
                 menu.add(Menu.NONE, EMPLOYEE_EDIT_WORKING_HOURS, Menu.NONE, "Edit working hours");
+                menu.add(Menu.NONE, EMPLOYEE_PROCESS_SERVICE, Menu.NONE, "View service requests");
+
                 break;
             case "Customer":
                 break;
@@ -140,6 +144,8 @@ public class DashboardActivity extends AppCompatActivity
                     case EMPLOYEE_EDIT_WORKING_HOURS:
                         fragmentClass = EmployeeEditWorkingHours.class;
                         break;
+                    case EMPLOYEE_PROCESS_SERVICE:
+                        fragmentClass = EmployeeProcessServiceRequest.class;
                     default:
                         fragmentClass = HomeFragment.class;
                         break;

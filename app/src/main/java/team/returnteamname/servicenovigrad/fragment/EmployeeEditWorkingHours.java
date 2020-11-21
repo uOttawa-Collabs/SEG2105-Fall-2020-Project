@@ -76,7 +76,7 @@ public class EmployeeEditWorkingHours extends Fragment
                         {
 
 
-                            if(editTextEndTime == null || editTextStartTime == null){
+                            if(editTextSelectedDate==null||editTextEndTime == null || editTextStartTime == null){
                                 Toast.makeText(getContext(), "All fields should be entered", Toast.LENGTH_SHORT).show();
                             }else if (editTextEndTime != null && editTextStartTime != null){
                                 String startTime = editTextStartTime.getText().toString().trim();
