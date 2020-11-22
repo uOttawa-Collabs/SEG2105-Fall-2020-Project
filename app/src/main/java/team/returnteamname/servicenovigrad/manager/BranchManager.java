@@ -24,6 +24,7 @@ public class BranchManager
     private final        Map<String, IManagerCallback> managerCallbacks = new HashMap<>();
 
     private boolean                                  initialized = false;
+    private HashMap<String, HashMap<String, String>> branchByService;
     private HashMap<String, HashMap<String, String>> employeeServices;
     private HashMap<String, HashMap<String, String>> branchWorkingHours;
 
@@ -75,6 +76,22 @@ public class BranchManager
                     }
                 });
 
+            reference.child("branchServices").addValueEventListener(
+                new ValueEventListener()
+                {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot)
+                    {
+                        branchByService = (HashMap<String, HashMap<String, String>>) snapshot.getValue();
+                        checkIfInitialized();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error)
+                    {
+                        throw error.toException();
+                    }
+                });
         }
     }
 
@@ -175,6 +192,40 @@ public class BranchManager
             if (ACCOUNT_MANAGER.verifyAccount(account) != null)
             {
                 return employeeServices.get(username);
+            }
+            else
+                throw new IllegalArgumentException("Invalid account credential");
+        }
+        else
+            throw new RuntimeException("Branch manager is not ready");
+    }
+
+    public HashMap<String, HashMap<String, String>> getAllBranchByService(AdminAccount account)
+    {
+        if (initialized)
+        {
+            if (ACCOUNT_MANAGER.verifyAccount(account) != null)
+            {
+                return branchByService;
+            }
+            else
+                throw new IllegalArgumentException("Invalid account credential");
+        }
+        else
+            throw new RuntimeException("Branch manager is not ready");
+    }
+
+    public String[] getBranchesByServiceName(Account account, String serviceName)
+    {
+        if (initialized)
+        {
+            if (ACCOUNT_MANAGER.verifyAccount(account) != null)
+            {
+                Map<String, String> map = branchByService.get(serviceName);
+                if (map != null)
+                    return map.keySet().toArray(new String[0]);
+                else
+                    return null;
             }
             else
                 throw new IllegalArgumentException("Invalid account credential");

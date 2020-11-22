@@ -12,6 +12,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -71,6 +72,12 @@ public class FormDocumentManager implements IDocumentManager
     }
 
     @Override
+    public void setName(String name)
+    {
+        editTextFormDocumentName.setText(name);
+    }
+
+    @Override
     public FormDocument collect()
     {
         try
@@ -126,6 +133,19 @@ public class FormDocumentManager implements IDocumentManager
         }
     }
 
+    public void setFormContents(HashMap<String, String> form)
+    {
+        for (String itemName : form.keySet())
+        {
+            FormDocumentItemManager manager = new FormDocumentItemManager(inflater, documentLayout,
+                                                                          formDocumentItemManagers);
+            manager.setItemName(itemName);
+            manager.setItemRegex(form.get(itemName));
+
+            formDocumentItemManagers.add(manager);
+        }
+    }
+
     // Nested classes
     private static class FormDocumentItemManager
     {
@@ -163,10 +183,14 @@ public class FormDocumentManager implements IDocumentManager
             parentLayout.addView(documentItemLayout, formDocumentItemManagers.size() + 1);
         }
 
-        private void deleteItem(View view)
+        public void setItemName(String name)
         {
-            formDocumentItemManagers.remove(this);
-            parentLayout.removeView(documentItemLayout);
+            editTextItem.setText(name);
+        }
+
+        public void setItemRegex(String regex)
+        {
+            editTextRegex.setText(regex);
         }
 
         public Map.Entry<String, String> collect()
@@ -231,6 +255,12 @@ public class FormDocumentManager implements IDocumentManager
             {
                 throw new IllegalArgumentException("Field cannot be empty", e);
             }
+        }
+
+        private void deleteItem(View view)
+        {
+            formDocumentItemManagers.remove(this);
+            parentLayout.removeView(documentItemLayout);
         }
 
         public static class Entry<K, V> implements Map.Entry<K, V>

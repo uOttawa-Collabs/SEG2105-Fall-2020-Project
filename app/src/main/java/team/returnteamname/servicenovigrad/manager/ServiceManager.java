@@ -13,11 +13,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 import team.returnteamname.servicenovigrad.account.Account;
 import team.returnteamname.servicenovigrad.account.AdminAccount;
-import team.returnteamname.servicenovigrad.account.UserAccount;
 import team.returnteamname.servicenovigrad.manager.interfaces.IManagerCallback;
 import team.returnteamname.servicenovigrad.service.Service;
 import team.returnteamname.servicenovigrad.service.document.Document;
@@ -116,7 +114,6 @@ public class ServiceManager
         if (initialized)
         {
             if (ACCOUNT_MANAGER.verifyAccount(account) != null)
-
                 return availableServices == null ? null : availableServices.toArray(new String[0]);
             else
                 throw new IllegalArgumentException("Invalid account credential");
@@ -146,21 +143,6 @@ public class ServiceManager
         {
             if (ACCOUNT_MANAGER.verifyAccount(account) != null)
                 return serviceDocumentsFormExtra;
-            else
-                throw new IllegalArgumentException("Invalid account credential");
-        }
-        else
-            throw new RuntimeException("Service manager is not ready");
-    }
-
-    public Service[] getAccountServices(UserAccount account, String branchName)
-    {
-        if (initialized)
-        {
-            if (ACCOUNT_MANAGER.verifyAccount(account) != null)
-            {
-                throw new IllegalArgumentException("Not implemented yet"); // TODO
-            }
             else
                 throw new IllegalArgumentException("Invalid account credential");
         }
@@ -216,6 +198,79 @@ public class ServiceManager
             throw new RuntimeException("Service manager is not ready");
     }
 
+    public void updateService(@NotNull AdminAccount account, @NotNull String oldServiceName,
+                              @NotNull Service service)
+    {
+        if (initialized)
+        {
+            if (ACCOUNT_MANAGER.verifyAccount(account) != null)
+            {
+                int sid = availableServices.indexOf(oldServiceName);
+                if (sid == -1)
+                    throw new IllegalArgumentException("Old service name does not exist");
+
+                DatabaseReference     databaseReference = firebaseDatabase.getReference();
+                Map<String, Document> documentMap       = service.getDocumentMap();
+
+                databaseReference.child("availableServices").child(Integer.toString(sid)).setValue(
+                    service.getName());
+
+                HashMap<String, String> employeeMap = BranchManager.getInstance().getAllBranchByService(
+                    account).get(oldServiceName);
+                databaseReference.child("branchServices").child(oldServiceName).removeValue();
+                databaseReference.child("branchServices").child(service.getName()).setValue(
+                    employeeMap);
+
+                HashMap<String, HashMap<String, String>> employeeServiceMap = BranchManager
+                    .getInstance()
+                    .getAllEmployeeServices(account);
+
+                for (String employee : employeeServiceMap.keySet())
+                {
+                    HashMap<String, String> serviceMap = employeeServiceMap.get(employee);
+                    if (serviceMap.containsKey(oldServiceName))
+                    {
+                        databaseReference.child("employeeServices").child(employee).child(
+                            oldServiceName).removeValue();
+                        databaseReference.child("employeeServices").child(employee).child(
+                            service.getName()).setValue(service.getName());
+                    }
+                }
+
+                databaseReference.child("serviceDocuments").child(oldServiceName).removeValue();
+                databaseReference.child("serviceDocumentsFormExtra").child(
+                    oldServiceName).removeValue();
+
+                for (String key : documentMap.keySet())
+                {
+                    Document document = documentMap.get(key);
+
+                    if (document != null)
+                    {
+                        String documentName = document.getName();
+                        String documentType = document.getType();
+
+                        databaseReference.child("serviceDocuments").child(service.getName()).child(
+                            documentName).setValue(documentType);
+
+                        if (document instanceof FormDocument)
+                        {
+                            FormDocument        formDocument = (FormDocument) document;
+                            Map<String, String> formMap      = formDocument.getFormMap();
+
+                            databaseReference.child("serviceDocumentsFormExtra").child(
+                                service.getName()).child(documentName).setValue(formMap);
+                        }
+                    }
+                }
+            }
+            else
+                throw new IllegalArgumentException("Invalid account credential");
+        }
+        else
+            throw new RuntimeException("Branch manager is not ready");
+    }
+
     public void deleteService(@NotNull AdminAccount adminAccount, @NotNull String name)
     {
         if (initialized)
@@ -233,7 +288,14 @@ public class ServiceManager
                 firebaseDatabase.getReference().child("serviceDocumentsFormExtra").child(
                     name).removeValue();
 
-                // TODO: May affect branches that was assigned to the deleted service. Need to modify this method during phase 3.
+                String[] affectedBranches = BranchManager.getInstance().getBranchesByServiceName(
+                    adminAccount, name);
+                firebaseDatabase.getReference().child("branchServices").child(name).removeValue();
+                for (String branchName : affectedBranches)
+                    firebaseDatabase.getReference().child("employeeServices").child(
+                        branchName).child(name).removeValue();
+
+                // TODO: May affect customers that was assigned to the deleted service. Need to modify this method during phase 4.
             }
             else
                 throw new IllegalArgumentException("Invalid administrator credential");

@@ -48,6 +48,12 @@ public class PhotoDocumentManager implements IDocumentManager
     }
 
     @Override
+    public void setName(String name)
+    {
+        editTextPhotoDocumentName.setText(name);
+    }
+
+    @Override
     public Document collect()
     {
         try

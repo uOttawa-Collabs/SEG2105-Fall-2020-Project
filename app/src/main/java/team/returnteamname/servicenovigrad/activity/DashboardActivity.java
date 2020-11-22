@@ -22,6 +22,7 @@ import team.returnteamname.servicenovigrad.fragment.AdminCreateAccountFragment;
 import team.returnteamname.servicenovigrad.fragment.AdminCreateServiceFragment;
 import team.returnteamname.servicenovigrad.fragment.AdminDeleteAccountFragment;
 import team.returnteamname.servicenovigrad.fragment.AdminDeleteServiceFragment;
+import team.returnteamname.servicenovigrad.fragment.AdminEditServiceFragment;
 import team.returnteamname.servicenovigrad.fragment.EmployeeAddServiceFragment;
 import team.returnteamname.servicenovigrad.fragment.EmployeeDeleteServiceFragment;
 import team.returnteamname.servicenovigrad.fragment.EmployeeEditWorkingHours;
@@ -34,11 +35,12 @@ public class DashboardActivity extends AppCompatActivity
     private static final int ADMIN_DELETE_ACCOUNT = 1;
     private static final int ADMIN_CREATE_SERVICE = 2;
     private static final int ADMIN_DELETE_SERVICE = 3;
+    private static final int ADMIN_EDIT_SERVICE   = 4;
 
-    private static final int EMPLOYEE_CREATE_SERVICE = 4;
-    private static final int EMPLOYEE_DELETE_SERVICE = 5;
-    private static final int EMPLOYEE_EDIT_WORKING_HOURS = 6;
-    private static final int EMPLOYEE_PROCESS_SERVICE = 7;
+    private static final int EMPLOYEE_CREATE_SERVICE     = 0;
+    private static final int EMPLOYEE_DELETE_SERVICE     = 1;
+    private static final int EMPLOYEE_EDIT_WORKING_HOURS = 2;
+    private static final int EMPLOYEE_PROCESS_SERVICE    = 3;
 
 
     @Override
@@ -84,6 +86,7 @@ public class DashboardActivity extends AppCompatActivity
                 menu.add(Menu.NONE, ADMIN_DELETE_ACCOUNT, Menu.NONE, "Delete an Account");
                 menu.add(Menu.NONE, ADMIN_CREATE_SERVICE, Menu.NONE, "Create a Service");
                 menu.add(Menu.NONE, ADMIN_DELETE_SERVICE, Menu.NONE, "Delete a Service");
+                menu.add(Menu.NONE, ADMIN_EDIT_SERVICE, Menu.NONE, "Edit a Service");
                 break;
             case "Employee":
                 menu.add(Menu.NONE, EMPLOYEE_CREATE_SERVICE, Menu.NONE, "Add a service");
@@ -125,6 +128,9 @@ public class DashboardActivity extends AppCompatActivity
                         break;
                     case ADMIN_DELETE_SERVICE:
                         fragmentClass = AdminDeleteServiceFragment.class;
+                        break;
+                    case ADMIN_EDIT_SERVICE:
+                        fragmentClass = AdminEditServiceFragment.class;
                         break;
                     default:
                         fragmentClass = HomeFragment.class;
@@ -194,7 +200,6 @@ public class DashboardActivity extends AppCompatActivity
 
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.layoutFragment, fragment).commit();
-
             }
             catch (Exception e)
             {
