@@ -8,6 +8,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,6 +28,7 @@ public class BranchManager
     private HashMap<String, HashMap<String, String>> branchByService;
     private HashMap<String, HashMap<String, String>> employeeServices;
     private HashMap<String, HashMap<String, String>> branchWorkingHours;
+    private HashMap<String, HashMap<String, String>> branchRatingScores;
 
     private BranchManager() {}
 
@@ -83,6 +85,22 @@ public class BranchManager
                     public void onDataChange(@NonNull DataSnapshot snapshot)
                     {
                         branchByService = (HashMap<String, HashMap<String, String>>) snapshot.getValue();
+                        checkIfInitialized();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error)
+                    {
+                        throw error.toException();
+                    }
+                });
+
+            reference.child("ratingScores").addValueEventListener(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot)
+                    {
+                        branchRatingScores = (HashMap<String, HashMap<String, String>>) snapshot.getValue();
                         checkIfInitialized();
                     }
 
@@ -229,6 +247,46 @@ public class BranchManager
             }
             else
                 throw new IllegalArgumentException("Invalid account credential");
+        }
+        else
+            throw new RuntimeException("Branch manager is not ready");
+    }
+
+    public double getAverageRatingScores(String username)  // may need to change when search function finish.
+    {
+        if(initialized)
+        {
+            //if(ACCOUNT_MANAGER.verifyAccount(account) != null)
+            //{
+                //String name = account.getUsername();
+                Map<String, String> map =  branchRatingScores.get(username);
+                ArrayList<String> scores = new ArrayList<>();
+                double sum = 0;
+
+                if(map != null)
+                {
+                    for(String key: map.keySet())
+                    {
+                        String value = map.get(key);
+                        scores.add(value);
+                    }
+
+                    for(int i=0; i<scores.size(); i++)
+                    {
+                        double num = Double.valueOf((scores.get(i)).toString());
+                        sum = sum + num;
+                    }
+
+                    double averageScore = sum / scores.size();
+                    return averageScore;
+                }
+
+                else
+                {
+                    return 0;
+                }
+
+            //}
         }
         else
             throw new RuntimeException("Branch manager is not ready");

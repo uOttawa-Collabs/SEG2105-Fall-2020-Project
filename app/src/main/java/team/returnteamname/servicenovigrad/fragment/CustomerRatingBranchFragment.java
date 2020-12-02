@@ -19,10 +19,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import team.returnteamname.servicenovigrad.R;
 import team.returnteamname.servicenovigrad.account.CustomerAccount;
 import team.returnteamname.servicenovigrad.account.EmployeeAccount;
+import team.returnteamname.servicenovigrad.manager.BranchManager;
 
 public class CustomerRatingBranchFragment extends Fragment
 {
-    private RatingBar ratingBar;
+    private       RatingBar         ratingBar;
     private final FirebaseDatabase  firebaseDatabase = FirebaseDatabase.getInstance();
 
     @Nullable
@@ -32,10 +33,12 @@ public class CustomerRatingBranchFragment extends Fragment
     {
         View view = inflater.inflate(R.layout.fragment_customer_rating_branch,
                                      container, false);
-        Bundle bundle = getArguments();
-        ratingBar = view.findViewById(R.id.ratingBar);
+        Bundle        bundle        = getArguments();
+        BranchManager branchManager = BranchManager.getInstance();
+
+        ratingBar                  = view.findViewById(R.id.ratingBar);
         EditText editTextRateScore = view.findViewById(R.id.editTextRateScore);
-        Button buttonRate = view.findViewById(R.id.buttonRate);
+        Button   buttonRate        = view.findViewById(R.id.buttonRate);
 
         if(bundle != null)
         {
@@ -43,6 +46,8 @@ public class CustomerRatingBranchFragment extends Fragment
 
             try
             {
+
+
                 ratingBar.setOnRatingBarChangeListener(
                     (ratingBar1, rating, fromTouch) ->
                     {
@@ -55,10 +60,11 @@ public class CustomerRatingBranchFragment extends Fragment
                     {
                         //EmployeeAccount branchName = new EmployeeAccount();    Need change when search function done.
                         DatabaseReference databaseReference = firebaseDatabase.getReference();
-                        databaseReference.child("ratingScores").child("Jinemployee").child(customerAccount.getUsername()).setValue(editTextRateScore.getText().toString());  //Need change when search function done.
 
-                        //databaseReference.child("RatingScores").child("Jinemployee").setValue(averageScore);
+                        databaseReference.child("ratingScores").child("Jinemployee").child(customerAccount.getUsername()).setValue(editTextRateScore.getText().toString());  //Need change when search function done.
                         Toast.makeText(getContext(), "Thanks for rating", Toast.LENGTH_SHORT).show();
+                        double averageScore = branchManager.getAverageRatingScores("Jinemployee");
+                        databaseReference.child("branchAverageScores").child("Jinemployee").setValue(averageScore);
                     }
                 );
 
