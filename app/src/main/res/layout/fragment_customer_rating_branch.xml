@@ -22,10 +22,23 @@
         android:id="@+id/ratingBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/buttonRate"
+        app:layout_constraintBottom_toTopOf="@+id/editTextRateScore"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textviewRating" />
+
+    <EditText
+        android:id="@+id/editTextRateScore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Rate Score"
+        android:inputType="textPersonName"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toTopOf="@+id/buttonRate"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ratingBar" />
 
     <Button
         android:id="@+id/buttonRate"
@@ -35,6 +48,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ratingBar"/>
+        app:layout_constraintTop_toBottomOf="@+id/editTextRateScore"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

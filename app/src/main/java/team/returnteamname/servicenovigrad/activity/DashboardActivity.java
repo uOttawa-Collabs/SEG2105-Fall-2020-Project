@@ -23,6 +23,7 @@ import team.returnteamname.servicenovigrad.fragment.AdminCreateServiceFragment;
 import team.returnteamname.servicenovigrad.fragment.AdminDeleteAccountFragment;
 import team.returnteamname.servicenovigrad.fragment.AdminDeleteServiceFragment;
 import team.returnteamname.servicenovigrad.fragment.AdminEditServiceFragment;
+import team.returnteamname.servicenovigrad.fragment.CustomerRatingBranchFragment;
 import team.returnteamname.servicenovigrad.fragment.EmployeeAddServiceFragment;
 import team.returnteamname.servicenovigrad.fragment.EmployeeDeleteServiceFragment;
 import team.returnteamname.servicenovigrad.fragment.EmployeeEditWorkingHours;
@@ -42,6 +43,7 @@ public class DashboardActivity extends AppCompatActivity
     private static final int EMPLOYEE_EDIT_WORKING_HOURS = 2;
     private static final int EMPLOYEE_PROCESS_SERVICE    = 3;
 
+    private static final int CUSTOMER_RATING_BRANCH = 0;  //Just for test, need delete when search function finish
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -95,6 +97,7 @@ public class DashboardActivity extends AppCompatActivity
                 menu.add(Menu.NONE, EMPLOYEE_PROCESS_SERVICE, Menu.NONE, "View service requests");
                 break;
             case "Customer":
+                menu.add(Menu.NONE, CUSTOMER_RATING_BRANCH, Menu.NONE, "Rate a branch");  //Just for test, need delete when search function finish
                 break;
         }
 
@@ -158,6 +161,11 @@ public class DashboardActivity extends AppCompatActivity
                 }
                 break;
             case "Customer":
+                switch(menuItem.getItemId()){
+                    case CUSTOMER_RATING_BRANCH:                                   //Just for test, need delete when search function finish
+                        fragmentClass = CustomerRatingBranchFragment.class;
+                        break;
+                }
                 break;
         }
 
