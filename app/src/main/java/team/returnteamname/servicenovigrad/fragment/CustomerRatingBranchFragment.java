@@ -46,28 +46,23 @@ public class CustomerRatingBranchFragment extends Fragment
 
             try
             {
-
-
                 ratingBar.setOnRatingBarChangeListener(
                     (ratingBar1, rating, fromTouch) ->
                     {
                         float ratingScore = ratingBar.getRating();
                         editTextRateScore.setText(Float.toString(ratingScore));
                     });
-
+                DatabaseReference databaseReference = firebaseDatabase.getReference();
                 buttonRate.setOnClickListener(
                     v->
                     {
                         //EmployeeAccount branchName = new EmployeeAccount();    Need change when search function done.
-                        DatabaseReference databaseReference = firebaseDatabase.getReference();
-
                         databaseReference.child("ratingScores").child("Jinemployee").child(customerAccount.getUsername()).setValue(editTextRateScore.getText().toString());  //Need change when search function done.
                         Toast.makeText(getContext(), "Thanks for rating", Toast.LENGTH_SHORT).show();
                         double averageScore = branchManager.getAverageRatingScores("Jinemployee");
                         databaseReference.child("branchAverageScores").child("Jinemployee").setValue(averageScore);
                     }
                 );
-
             }
             catch (Exception e)
             {
