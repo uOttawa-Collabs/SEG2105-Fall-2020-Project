@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -37,7 +38,7 @@ public class CustomerFillFormFragment extends Fragment
         editTextValues[2] = view.findViewById(R.id.editTextCustomerServiceAddressStreet);
         editTextValues[3] = view.findViewById(R.id.editTextCustomerServicePostalAddress);
 
-
+        DatePicker customerDOB = view.findViewById(R.id.datePickerCustomerDOB);
         LinearLayout linearLayoutCustomerForm = view.findViewById(R.id.linearLayoutCustomerForm);
         Button       buttonSubmit     = view.findViewById(R.id.buttonCustomerFormSubmit);
 
@@ -58,6 +59,12 @@ public class CustomerFillFormFragment extends Fragment
                         }else{
                             // validate address, postal code, first and last name. date of birth
                             // then send everything to the branch
+                            String customerDofB = customerDOB.getDayOfMonth()+"-"
+                                                  +customerDOB.getMonth()+"-"
+                                                  +customerDOB.getYear();
+
+                            // after validate store, editTextValues[0-3], customerOofB to database. dkh
+
                         }
 
 

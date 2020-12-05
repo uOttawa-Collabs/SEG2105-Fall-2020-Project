@@ -55,7 +55,7 @@
             android:text="Please Select Below Your Birthday" />
 
         <DatePicker
-            android:id="@+id/datePicker1"
+            android:id="@+id/datePickerCustomerDOB"
             android:layout_width="match_parent"
             android:layout_height="120dp"
             android:calendarViewShown="false"
