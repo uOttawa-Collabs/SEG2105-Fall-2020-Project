@@ -25,6 +25,7 @@ import team.returnteamname.servicenovigrad.fragment.AdminDeleteServiceFragment;
 import team.returnteamname.servicenovigrad.fragment.AdminEditServiceFragment;
 import team.returnteamname.servicenovigrad.fragment.CustomerRatingBranchFragment;
 import team.returnteamname.servicenovigrad.fragment.CustomerSearchBranchFragment;
+import team.returnteamname.servicenovigrad.fragment.CustomerUploadDocumentFragment;
 import team.returnteamname.servicenovigrad.fragment.EmployeeAddServiceFragment;
 import team.returnteamname.servicenovigrad.fragment.EmployeeDeleteServiceFragment;
 import team.returnteamname.servicenovigrad.fragment.EmployeeEditWorkingHours;
@@ -46,6 +47,7 @@ public class DashboardActivity extends AppCompatActivity
 
     private static final int CUSTOMER_SEARCH_BRANCH = 0;
     private static final int CUSTOMER_RATING_BRANCH = 1;  //Just for test, need delete when search function finish
+    private static final int CUSTOMER_UPLOAD_DOCUMENT = 2;  //Just for test, need delete when search function finish
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -102,6 +104,7 @@ public class DashboardActivity extends AppCompatActivity
                 menu.add(Menu.NONE, CUSTOMER_SEARCH_BRANCH, Menu.NONE, "Search for a branch");
                 menu.add(Menu.NONE, CUSTOMER_RATING_BRANCH, Menu.NONE,
                          "Rate a branch");  //Just for test, need delete when search function finish
+                menu.add(Menu.NONE, CUSTOMER_UPLOAD_DOCUMENT, Menu.NONE, "Upload Document");  //Just for test, need delete when search function finish
                 break;
         }
 
@@ -173,6 +176,9 @@ public class DashboardActivity extends AppCompatActivity
                         break;
                     case CUSTOMER_RATING_BRANCH:                                   //Just for test, need delete when search function finish
                         fragmentClass = CustomerRatingBranchFragment.class;
+                        break;
+                    case CUSTOMER_UPLOAD_DOCUMENT:                                  //Just for test, need delete when search function finish
+                        fragmentClass = CustomerUploadDocumentFragment.class;
                         break;
                     default:
                         fragmentClass = HomeFragment.class;
