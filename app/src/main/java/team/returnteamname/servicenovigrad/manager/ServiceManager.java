@@ -288,10 +288,10 @@ public class ServiceManager
                 firebaseDatabase.getReference().child("serviceDocumentsFormExtra").child(
                     name).removeValue();
 
-                String[] affectedBranches = BranchManager.getInstance().getBranchesByServiceName(
+                HashMap<String, String> affectedBranches = BranchManager.getInstance().getBranchesByServiceName(
                     adminAccount, name);
                 firebaseDatabase.getReference().child("branchServices").child(name).removeValue();
-                for (String branchName : affectedBranches)
+                for (String branchName : affectedBranches.keySet())
                     firebaseDatabase.getReference().child("employeeServices").child(
                         branchName).child(name).removeValue();
 

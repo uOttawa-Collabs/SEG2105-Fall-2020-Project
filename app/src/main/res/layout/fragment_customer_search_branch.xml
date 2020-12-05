@@ -2,44 +2,45 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layoutEmployeeDeleteServiceFragment"
+    android:id="@+id/layoutCustomerSearchBranchFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.EmployeeDeleteServiceFragment">
+    tools:context=".fragment.CustomerSearchBranchFragment">
 
     <RelativeLayout
         android:id="@+id/layoutController"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
-        android:layout_marginVertical="30dp"
-        app:layout_constraintBottom_toTopOf="@id/listViewService"
+        android:layout_marginTop="30dp"
+        app:layout_constraintBottom_toTopOf="@id/listViewBranch"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <EditText
-            android:id="@+id/editTextService"
-            android:layout_width="270dp"
+            android:id="@+id/editTextSearch"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:autofillHints="Service Name"
-            android:hint="Click or enter a service name"
+            android:ems="15"
+            android:hint="Enter any keywords to search"
             android:inputType="textNoSuggestions" />
 
         <Button
-            android:id="@+id/buttonDelete"
+            android:id="@+id/buttonSearch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_gravity="end"
-            android:text="Delete"
+            android:text="Search"
             android:textColor="@android:color/white" />
 
     </RelativeLayout>
 
     <ListView
-        android:id="@+id/listViewService"
+        android:id="@+id/listViewBranch"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginHorizontal="20dp"
@@ -48,5 +49,5 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/layoutController" />
-</androidx.constraintlayout.widget.ConstraintLayout>
 
+</androidx.constraintlayout.widget.ConstraintLayout>

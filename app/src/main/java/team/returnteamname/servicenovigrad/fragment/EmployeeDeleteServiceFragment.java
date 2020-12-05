@@ -117,5 +117,4 @@ public class EmployeeDeleteServiceFragment extends Fragment
 
         return view;
     }
-
 }

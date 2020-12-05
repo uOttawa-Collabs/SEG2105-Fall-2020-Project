@@ -233,17 +233,13 @@ public class BranchManager
             throw new RuntimeException("Branch manager is not ready");
     }
 
-    public String[] getBranchesByServiceName(Account account, String serviceName)
+    public HashMap<String, String> getBranchesByServiceName(Account account, String serviceName)
     {
         if (initialized)
         {
             if (ACCOUNT_MANAGER.verifyAccount(account) != null)
             {
-                Map<String, String> map = branchByService.get(serviceName);
-                if (map != null)
-                    return map.keySet().toArray(new String[0]);
-                else
-                    return null;
+                return branchByService.get(serviceName);
             }
             else
                 throw new IllegalArgumentException("Invalid account credential");
@@ -273,7 +269,7 @@ public class BranchManager
 
                     for(int i=0; i<scores.size(); i++)
                     {
-                        double num = Double.valueOf((scores.get(i)).toString());
+                        double num = Double.valueOf((scores.get(i)));
                         sum = sum + num;
                     }
 

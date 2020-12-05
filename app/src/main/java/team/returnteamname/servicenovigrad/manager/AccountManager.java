@@ -26,13 +26,13 @@ public class AccountManager
     private final        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private              AdminAccount     adminAccount;
 
-    private ArrayList<String>                        accounts;
-    private ArrayList<String>                        availableRoles;
-    private HashMap<String, String>                  emails;
-    private HashMap<String, HashMap<String, String>> names;
-    private HashMap<String, String>                  roleMembers;
-    private HashMap<String, String>                  roles;
-    private HashMap<String, String>                  shadow;
+    private ArrayList<String>                         accounts;
+    private ArrayList<String>                         availableRoles;
+    private HashMap<String, String>                   emails;
+    private HashMap<String, HashMap<String, String>>  names;
+    private HashMap<String, HashMap<String, Boolean>> roleMembers;
+    private HashMap<String, String>                   roles;
+    private HashMap<String, String>                   shadow;
 
     private final Map<String, IManagerCallback> managerCallbacks = new HashMap<>();
     private       boolean                       initialized      = false;
@@ -124,7 +124,7 @@ public class AccountManager
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot)
                 {
-                    roleMembers = (HashMap<String, String>) snapshot.getValue();
+                    roleMembers = (HashMap<String, HashMap<String, Boolean>>) snapshot.getValue();
                     checkIfInitialized();
                 }
 
@@ -248,6 +248,19 @@ public class AccountManager
             {
                 return accounts.toArray(new String[0]);
             }
+            else
+                throw new IllegalArgumentException("Invalid credential");
+        }
+        else
+            throw new RuntimeException("Account manager is not ready");
+    }
+
+    public HashMap<String, Boolean> getAllEmployeeAccountNames(Account account)
+    {
+        if (initialized)
+        {
+            if (account != null && verifyAccount(account) != null)
+                return roleMembers.get("Employee");
             else
                 throw new IllegalArgumentException("Invalid credential");
         }
