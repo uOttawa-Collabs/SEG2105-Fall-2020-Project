@@ -13,12 +13,12 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
         android:layout_marginVertical="30dp"
+        android:autofillHints="Service Name"
         android:gravity="center"
         android:hint="New Service Name"
         android:inputType="textNoSuggestions"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:autofillHints="Service Name"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ScrollView

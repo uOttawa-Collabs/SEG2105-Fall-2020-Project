@@ -35,7 +35,7 @@ public class EmployeeDeleteServiceFragment extends Fragment
     {
         View view = inflater.inflate(R.layout.fragment_employee_delete_service,
                                      container, false);
-        Bundle         bundle        = getArguments();
+        Bundle        bundle        = getArguments();
         BranchManager branchManager = BranchManager.getInstance();
 
         ListView listViewService = view.findViewById(R.id.listViewService);
@@ -73,9 +73,9 @@ public class EmployeeDeleteServiceFragment extends Fragment
                 buttonDelete.setOnClickListener(
                     v ->
                     {
-                        CharSequence serviceNameSequence = editTextService.getText();
-                        String       serviceName;
-                        DatabaseReference databaseReference = firebaseDatabase.getReference();
+                        CharSequence      serviceNameSequence = editTextService.getText();
+                        String            serviceName;
+                        DatabaseReference databaseReference   = firebaseDatabase.getReference();
 
                         if (serviceNameSequence == null
                             || (serviceName = serviceNameSequence.toString().trim()).equals(""))

@@ -96,7 +96,8 @@ public class BranchManager
                 });
 
             reference.child("ratingScores").addValueEventListener(
-                new ValueEventListener() {
+                new ValueEventListener()
+                {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot)
                     {
@@ -194,7 +195,7 @@ public class BranchManager
             if (ACCOUNT_MANAGER.verifyAccount(account) != null)
             {
                 String name = account.getUsername();
-                return employeeServices.get(name);
+                return branchWorkingHours.get(name);
             }
             else
                 throw new IllegalArgumentException("Invalid account credential");
@@ -209,7 +210,7 @@ public class BranchManager
         {
             if (ACCOUNT_MANAGER.verifyAccount(account) != null)
             {
-                return employeeServices.get(username);
+                return branchWorkingHours.get(username);
             }
             else
                 throw new IllegalArgumentException("Invalid account credential");
@@ -248,39 +249,39 @@ public class BranchManager
             throw new RuntimeException("Branch manager is not ready");
     }
 
-    public double getAverageRatingScores(String username)  // may need to change when search function finish.
+    public double getAverageRatingScores(
+        String username)  // may need to change when search function finish.
     {
-        if(initialized)
+        if (initialized)
         {
             //if(ACCOUNT_MANAGER.verifyAccount(account) != null)
             //{
-                //String name = account.getUsername();
-                Map<String, String> map =  branchRatingScores.get(username);
-                ArrayList<String> scores = new ArrayList<>();
-                double sum = 0;
+            //String name = account.getUsername();
+            Map<String, String> map    = branchRatingScores.get(username);
+            ArrayList<String>   scores = new ArrayList<>();
+            double              sum    = 0;
 
-                if(map != null)
+            if (map != null)
+            {
+                for (String key : map.keySet())
                 {
-                    for(String key: map.keySet())
-                    {
-                        String value = map.get(key);
-                        scores.add(value);
-                    }
-
-                    for(int i=0; i<scores.size(); i++)
-                    {
-                        double num = Double.valueOf((scores.get(i)));
-                        sum = sum + num;
-                    }
-
-                    double averageScore = sum / scores.size();
-                    return averageScore;
+                    String value = map.get(key);
+                    scores.add(value);
                 }
 
-                else
+                for (int i = 0; i < scores.size(); i++)
                 {
-                    return 0;
+                    double num = Double.valueOf((scores.get(i)));
+                    sum = sum + num;
                 }
+
+                double averageScore = sum / scores.size();
+                return averageScore;
+            }
+            else
+            {
+                return 0;
+            }
 
             //}
         }

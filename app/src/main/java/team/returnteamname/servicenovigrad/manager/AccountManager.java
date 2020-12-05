@@ -22,20 +22,18 @@ import team.returnteamname.servicenovigrad.manager.interfaces.IManagerCallback;
 
 public class AccountManager
 {
-    private static final AccountManager   INSTANCE         = new AccountManager();
-    private final        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-    private              AdminAccount     adminAccount;
-
-    private ArrayList<String>                         accounts;
-    private ArrayList<String>                         availableRoles;
-    private HashMap<String, String>                   emails;
-    private HashMap<String, HashMap<String, String>>  names;
-    private HashMap<String, HashMap<String, Boolean>> roleMembers;
-    private HashMap<String, String>                   roles;
-    private HashMap<String, String>                   shadow;
-
-    private final Map<String, IManagerCallback> managerCallbacks = new HashMap<>();
-    private       boolean                       initialized      = false;
+    private static final AccountManager                            INSTANCE         = new AccountManager();
+    private final        FirebaseDatabase                          firebaseDatabase = FirebaseDatabase.getInstance();
+    private final        Map<String, IManagerCallback>             managerCallbacks = new HashMap<>();
+    private              AdminAccount                              adminAccount;
+    private              ArrayList<String>                         accounts;
+    private              ArrayList<String>                         availableRoles;
+    private              HashMap<String, String>                   emails;
+    private              HashMap<String, HashMap<String, String>>  names;
+    private              HashMap<String, HashMap<String, Boolean>> roleMembers;
+    private              HashMap<String, String>                   roles;
+    private              HashMap<String, String>                   shadow;
+    private              boolean                                   initialized      = false;
 
     // Singleton
     private AccountManager() {}

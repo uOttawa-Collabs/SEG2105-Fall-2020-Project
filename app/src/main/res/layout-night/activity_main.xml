@@ -67,8 +67,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Login"
             android:enabled="false"
+            android:text="Login"
             android:textColor="@android:color/white"
             android:textSize="18sp" />
 
@@ -81,8 +81,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Create an account"
             android:enabled="false"
+            android:text="Create an account"
             android:textColor="@android:color/white"
             android:textSize="18sp" />
     </LinearLayout>

@@ -22,6 +22,7 @@ import team.returnteamname.servicenovigrad.R;
 public class CustomerFillFormFragment extends Fragment
 {
     private final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -38,16 +39,18 @@ public class CustomerFillFormFragment extends Fragment
         editTextValues[2] = view.findViewById(R.id.editTextCustomerServiceAddressStreet);
         editTextValues[3] = view.findViewById(R.id.editTextCustomerServicePostalAddress);
 
-        DatePicker customerDOB = view.findViewById(R.id.datePickerCustomerDOB);
+        DatePicker   customerDOB              = view.findViewById(R.id.datePickerCustomerDOB);
         LinearLayout linearLayoutCustomerForm = view.findViewById(R.id.linearLayoutCustomerForm);
-        Button       buttonSubmit     = view.findViewById(R.id.buttonCustomerFormSubmit);
+        Button       buttonSubmit             = view.findViewById(R.id.buttonCustomerFormSubmit);
 
-        try{
+        try
+        {
             buttonSubmit.setOnClickListener(
                 v ->
                 {
                     DatabaseReference databaseReference = firebaseDatabase.getReference();
-                    try{
+                    try
+                    {
 
                         if (editTextValues[0] == null
                             || editTextValues[1] == null
@@ -56,20 +59,23 @@ public class CustomerFillFormFragment extends Fragment
                         {
                             Toast.makeText(getContext(), "All fields should be entered",
                                            Toast.LENGTH_SHORT).show();
-                        }else{
+                        }
+                        else
+                        {
                             // validate address, postal code, first and last name. date of birth
                             // then send everything to the branch
-                            String customerDofB = customerDOB.getDayOfMonth()+"-"
-                                                  +customerDOB.getMonth()+"-"
-                                                  +customerDOB.getYear();
+                            String customerDofB = customerDOB.getDayOfMonth() + "-"
+                                                  + customerDOB.getMonth() + "-"
+                                                  + customerDOB.getYear();
 
                             // after validate store, editTextValues[0-3], customerOofB to database. dkh
 
                         }
 
 
-
-                    }catch (Exception e) {
+                    }
+                    catch (Exception e)
+                    {
                         Toast.makeText(getContext(), e.getMessage(),
                                        Toast.LENGTH_LONG).show();
                         e.printStackTrace();
@@ -77,12 +83,12 @@ public class CustomerFillFormFragment extends Fragment
 
 
                 });
-        }catch (Exception e)
+        }
+        catch (Exception e)
         {
             Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
-
 
 
         return view;

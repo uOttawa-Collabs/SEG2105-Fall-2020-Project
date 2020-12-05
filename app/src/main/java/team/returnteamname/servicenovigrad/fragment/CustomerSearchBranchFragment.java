@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -17,9 +18,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Objects;
+import java.util.List;
 
 import team.returnteamname.servicenovigrad.R;
 import team.returnteamname.servicenovigrad.account.CustomerAccount;
@@ -38,7 +42,8 @@ public class CustomerSearchBranchFragment extends Fragment
     private       Button          buttonSearch;
     private       CustomerAccount account;
 
-    private HashSet<String>  hashSetBranchNameSearchResult;
+    private HashSet<String>  hashSetBranchNames;
+    private List<String>     listBranchNames;
     private ItemArrayAdapter arrayAdapterListView;
 
     @Override
@@ -53,9 +58,12 @@ public class CustomerSearchBranchFragment extends Fragment
         editTextSearch = view.findViewById(R.id.editTextSearch);
         buttonSearch   = view.findViewById(R.id.buttonSearch);
 
-        hashSetBranchNameSearchResult = new HashSet<>();
-        arrayAdapterListView          = new ItemArrayAdapter(view.getContext(),
-                                                             R.layout.layout_list_view_branch_item);
+        hashSetBranchNames   = new HashSet<>();
+        listBranchNames      = new ArrayList<>();
+        arrayAdapterListView = new ItemArrayAdapter(view.getContext(),
+                                                    R.layout.layout_list_view_branch_item,
+                                                    listBranchNames);
+
         listViewBranch.setAdapter(arrayAdapterListView);
 
         if (bundle != null)
@@ -92,7 +100,7 @@ public class CustomerSearchBranchFragment extends Fragment
             return;
         }
 
-        hashSetBranchNameSearchResult.clear();
+        hashSetBranchNames.clear();
         arrayAdapterListView.clear();
 
         try
@@ -103,23 +111,28 @@ public class CustomerSearchBranchFragment extends Fragment
             for (String name : branchNames.keySet())
             {
                 // Search for branch name
-                if (name.matches(searchRegex))
+                if (name != null && name.matches(searchRegex))
                     addToList(name);
 
                 // Search for working hours
                 HashMap<String, String> workingHours = branchManager.getBranchWorkingHoursByUsername(
                     account, name);
-                for (String key : workingHours.keySet())
+
+                if (workingHours != null)
                 {
-                    if (key.matches(searchRegex))
-                        addToList(name);
-                    if (Objects.requireNonNull(workingHours.get(key)).matches(searchRegex))
-                        addToList(name);
+                    for (String key : workingHours.keySet())
+                    {
+                        if (key != null && key.matches(searchRegex))
+                            addToList(name);
+
+                        String hours = workingHours.get(key);
+
+                        if (hours != null && hours.matches(searchRegex))
+                            addToList(name);
+                    }
                 }
 
                 // TODO: Search for address
-
-                arrayAdapterListView.notifyDataSetChanged();
             }
 
             // Search for types of service
@@ -134,6 +147,8 @@ public class CustomerSearchBranchFragment extends Fragment
                         addToList(branchName);
                 }
             }
+
+            arrayAdapterListView.notifyDataSetChanged();
         }
         catch (Exception e)
         {
@@ -144,19 +159,21 @@ public class CustomerSearchBranchFragment extends Fragment
 
     private void onClickItem(AdapterView<?> adapterView, View view, int i, long l)
     {
-
+        String branchName = arrayAdapterListView.getItem(i);
+        Toast.makeText(getContext(), "You clicked " + branchName, Toast.LENGTH_LONG).show();
+        // replaceFragment(???, branchName);
     }
 
     private void addToList(String branchName)
     {
-        if (!hashSetBranchNameSearchResult.contains(branchName))
+        if (!hashSetBranchNames.contains(branchName))
         {
-            hashSetBranchNameSearchResult.add(branchName);
+            hashSetBranchNames.add(branchName);
             arrayAdapterListView.add(branchName);
         }
     }
 
-    private void replaceFragment(Class<? extends Fragment> fragmentClass, String serviceName)
+    private void replaceFragment(Class<? extends Fragment> fragmentClass, String branchName)
     {
         try
         {
@@ -164,7 +181,7 @@ public class CustomerSearchBranchFragment extends Fragment
 
             Bundle bundleInner = new Bundle();
             bundleInner.putSerializable("account", account);
-            bundleInner.putSerializable("serviceName", serviceName);
+            bundleInner.putSerializable("serviceName", branchName);
             fragment.setArguments(bundleInner);
 
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
@@ -182,12 +199,15 @@ public class CustomerSearchBranchFragment extends Fragment
     // Nested class
     private static class ItemArrayAdapter extends ArrayAdapter<String>
     {
-        private final Context context;
+        private final Context      context;
+        private final List<String> branchNameList;
 
-        public ItemArrayAdapter(@NonNull Context context, int resource)
+        public ItemArrayAdapter(@NonNull Context context, int resource,
+                                @NotNull List<String> branchNameList)
         {
-            super(context, resource);
-            this.context = context;
+            super(context, resource, branchNameList);
+            this.context        = context;
+            this.branchNameList = branchNameList;
         }
 
         @NonNull
@@ -198,7 +218,18 @@ public class CustomerSearchBranchFragment extends Fragment
                 convertView = LayoutInflater.from(context).inflate(
                     R.layout.layout_list_view_branch_item, parent, false);
 
-            // TODO: Set text fields
+            TextView listEntryBranchName = convertView.findViewById(R.id.listEntryBranchName);
+            TextView listAddress         = convertView.findViewById(R.id.listAddress);
+
+            // Set text fields
+            String branchName = getItem(position);
+
+            if (branchName != null)
+                listEntryBranchName.setText(branchName);
+            else
+                listEntryBranchName.setText("Unknown");
+
+            listAddress.setText("Unknown");   // TODO
 
             return convertView;
         }

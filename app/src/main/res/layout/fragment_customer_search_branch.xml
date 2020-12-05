@@ -25,7 +25,7 @@
             android:layout_gravity="start"
             android:autofillHints="Service Name"
             android:ems="15"
-            android:hint="Enter any keywords to search"
+            android:hint="Enter a regular expression to search"
             android:inputType="textNoSuggestions" />
 
         <Button

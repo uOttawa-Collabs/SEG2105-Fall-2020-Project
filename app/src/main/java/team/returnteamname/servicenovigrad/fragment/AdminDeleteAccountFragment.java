@@ -39,7 +39,7 @@ public class AdminDeleteAccountFragment extends Fragment
 
         if (bundle != null)
         {
-            AdminAccount   account        = (AdminAccount) bundle.getSerializable("account");
+            AdminAccount account = (AdminAccount) bundle.getSerializable("account");
 
             try
             {

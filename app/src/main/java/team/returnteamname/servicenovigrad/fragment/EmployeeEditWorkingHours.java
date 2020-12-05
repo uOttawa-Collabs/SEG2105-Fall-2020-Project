@@ -21,8 +21,9 @@ import team.returnteamname.servicenovigrad.account.EmployeeAccount;
 
 public class EmployeeEditWorkingHours extends Fragment
 {
-    private           CalendarView      calendarView;
-    private final FirebaseDatabase  firebaseDatabase = FirebaseDatabase.getInstance();
+    private final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+    private       CalendarView     calendarView;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -30,13 +31,13 @@ public class EmployeeEditWorkingHours extends Fragment
     {
         View view = inflater.inflate(R.layout.fragment_employee_edit_working_hours,
                                      container, false);
-        Bundle bundle         = getArguments();
+        Bundle bundle = getArguments();
 
         calendarView = (view.findViewById(R.id.calendarView));
-        EditText editTextStartTime = view.findViewById(R.id.editTextStartTime);
-        EditText editTextEndTime = view.findViewById(R.id.editTextEndTime);
-        EditText editTextSelectedDate = view.findViewById(R.id. editTextSelectedDate);
-        Button buttonSubmit = view.findViewById(R.id.buttonSubmit);
+        EditText editTextStartTime    = view.findViewById(R.id.editTextStartTime);
+        EditText editTextEndTime      = view.findViewById(R.id.editTextEndTime);
+        EditText editTextSelectedDate = view.findViewById(R.id.editTextSelectedDate);
+        Button   buttonSubmit         = view.findViewById(R.id.buttonSubmit);
 
         if (bundle != null)
         {

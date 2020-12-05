@@ -67,9 +67,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:enabled="false"
             android:text="Login"
             android:textColor="@android:color/white"
-            android:enabled="false"
             android:textSize="18sp" />
 
         <Space
@@ -81,9 +81,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:enabled="false"
             android:text="Create an account"
             android:textColor="@android:color/white"
-            android:enabled="false"
             android:textSize="18sp" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

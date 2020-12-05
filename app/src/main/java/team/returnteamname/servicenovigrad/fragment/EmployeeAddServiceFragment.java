@@ -28,7 +28,8 @@ import team.returnteamname.servicenovigrad.manager.ServiceManager;
 
 public class EmployeeAddServiceFragment extends Fragment
 {
-    private final        FirebaseDatabase              firebaseDatabase = FirebaseDatabase.getInstance();
+    private final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -36,12 +37,12 @@ public class EmployeeAddServiceFragment extends Fragment
     {
         View view = inflater.inflate(R.layout.fragment_employee_add_service,
                                      container, false);
-        Bundle         bundle         = getArguments();
+        Bundle        bundle        = getArguments();
         BranchManager branchManager = BranchManager.getInstance();
 
         ListView listViewService = view.findViewById(R.id.listViewService);
         EditText editTextService = view.findViewById(R.id.editTextService);
-        Button   buttonAdd    = view.findViewById(R.id.buttonAdd);
+        Button   buttonAdd       = view.findViewById(R.id.buttonAdd);
 
         if (bundle != null)
         {
@@ -105,9 +106,9 @@ public class EmployeeAddServiceFragment extends Fragment
                 buttonAdd.setOnClickListener(
                     v ->
                     {
-                        CharSequence serviceNameSequence = editTextService.getText();
-                        String       serviceName;
-                        DatabaseReference databaseReference = firebaseDatabase.getReference();
+                        CharSequence      serviceNameSequence = editTextService.getText();
+                        String            serviceName;
+                        DatabaseReference databaseReference   = firebaseDatabase.getReference();
 
                         if (serviceNameSequence == null
                             || (serviceName = serviceNameSequence.toString().trim()).equals(""))
