@@ -28,9 +28,9 @@ public class CustomerFillFormFragment extends Fragment
 {
     private final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     String[] customerInfo = {"First name","Last Name","DOB","address"};
-    String serviceType;
+    String          serviceType;
     CustomerAccount account;
-    String branchName;
+    String          branchName;
 
     @Nullable
     @Override

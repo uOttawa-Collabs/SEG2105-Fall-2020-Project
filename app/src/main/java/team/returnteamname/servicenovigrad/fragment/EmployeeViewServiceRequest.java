@@ -52,7 +52,7 @@ public class EmployeeViewServiceRequest extends Fragment
                     Arrays.asList(branchServiceName));
                 ArrayList<String> serviceNamesList = new ArrayList<>();
 
-                for (int i = 1; i < branchServiceNameList.size(); i++)
+                for (int i = 0; i < branchServiceNameList.size(); i++)
                 {
                         serviceNamesList.add(branchServiceNameList.get(i));
                 }
