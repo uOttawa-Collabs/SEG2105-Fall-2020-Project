@@ -25,7 +25,7 @@ import team.returnteamname.servicenovigrad.account.CustomerAccount;
 public class CustomerFillFormFragment extends Fragment
 {
     private final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-    String[] documentType = {"HealthCard","Photo ID","Driver License"};
+    String[] customerInfo = {"First name","Last Name","DOB","address"};
 
     @Nullable
     @Override
@@ -47,15 +47,9 @@ public class CustomerFillFormFragment extends Fragment
         LinearLayout linearLayoutCustomerForm = view.findViewById(R.id.linearLayoutCustomerForm);
         Button       buttonSubmit     = view.findViewById(R.id.buttonCustomerFormSubmit);
 
-        String [] values =
-            {"G","G1","G2"};
-        Spinner spinner = view.findViewById(R.id.spinnerCFFDL);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this.getActivity(),
-                                                                              android.R.layout.simple_spinner_item,values);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
 
 
+        String serviceType = (String) bundle.getSerializable("serviceType");
 
 
         if (bundle != null)
@@ -92,7 +86,13 @@ public class CustomerFillFormFragment extends Fragment
 
                                 // after validate store, editTextValues[0-3], customerOofB to database.
                                 databaseReference.child("branchServiceRequest").child(account.getUsername())
-                                    .child("HealthCard");
+                                                 .child(serviceType).child("First Name").setValue(editTextValues[0]);
+                                databaseReference.child("branchServiceRequest").child(account.getUsername())
+                                                 .child(serviceType).child("Last Name").setValue(editTextValues[1]);
+                                databaseReference.child("branchServiceRequest").child(account.getUsername())
+                                                 .child(serviceType).child("Address").setValue(editTextValues[2]+", "+editTextValues[3]);
+
+
 
 
                             }
