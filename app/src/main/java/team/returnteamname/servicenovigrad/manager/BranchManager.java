@@ -30,6 +30,7 @@ public class BranchManager
     private HashMap<String, HashMap<String, String>> branchWorkingHours;
     private HashMap<String, HashMap<String, String>> branchRatingScores;
     private HashMap<String, HashMap<String, String>> branchServiceRequest;
+    private HashMap<String, String>                  branchAddress;
 
     private BranchManager() {}
 
@@ -129,6 +130,23 @@ public class BranchManager
                         throw error.toException();
                     }
                 });
+
+            reference.child("branchAddress").addValueEventListener(
+                new ValueEventListener()
+                {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot)
+                    {
+                        branchAddress = (HashMap<String, String>) snapshot.getValue();
+                        checkIfInitialized();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error)
+                    {
+                        throw error.toException();
+                    }
+                });
         }
     }
 
@@ -171,6 +189,7 @@ public class BranchManager
         else
             throw new RuntimeException("Branch manager is not ready");
     }
+
     public String[] getEmployeeServicesRequest(EmployeeAccount account)
     {
         if (initialized)
@@ -300,41 +319,89 @@ public class BranchManager
             throw new RuntimeException("Branch manager is not ready");
     }
 
-    public double getAverageRatingScores(
-        String username)  // may need to change when search function finish.
+    public double getBranchAverageRatingScoresByUsername(Account account, String username)
     {
         if (initialized)
         {
-            //if(ACCOUNT_MANAGER.verifyAccount(account) != null)
-            //{
-            //String name = account.getUsername();
-            Map<String, String> map    = branchRatingScores.get(username);
-            ArrayList<String>   scores = new ArrayList<>();
-            double              sum    = 0;
-
-            if (map != null)
+            if (ACCOUNT_MANAGER.verifyAccount(account) != null)
             {
-                for (String key : map.keySet())
-                {
-                    String value = map.get(key);
-                    scores.add(value);
-                }
+                Map<String, String> map    = branchRatingScores.get(username);
+                ArrayList<String>   scores = new ArrayList<>();
+                double              sum    = 0;
 
-                for (int i = 0; i < scores.size(); i++)
+                if (map != null)
                 {
-                    double num = Double.valueOf((scores.get(i)));
-                    sum = sum + num;
-                }
+                    for (String key : map.keySet())
+                    {
+                        String value = map.get(key);
+                        scores.add(value);
+                    }
 
-                double averageScore = sum / scores.size();
-                return averageScore;
+                    for (int i = 0; i < scores.size(); i++)
+                    {
+                        double num = Double.parseDouble((scores.get(i)));
+                        sum = sum + num;
+                    }
+
+                    return sum / scores.size();
+                }
+                else
+                {
+                    return 0;
+                }
             }
             else
-            {
-                return 0;
-            }
+                throw new IllegalArgumentException("Invalid account credential");
+        }
+        else
+            throw new RuntimeException("Branch manager is not ready");
+    }
 
-            //}
+    public HashMap<String, String> getAllBranchAddress(AdminAccount account)
+    {
+        if (initialized)
+        {
+            if (ACCOUNT_MANAGER.verifyAccount(account) != null)
+            {
+                return branchAddress;
+            }
+            else
+                throw new IllegalArgumentException("Invalid account credential");
+        }
+        else
+            throw new RuntimeException("Branch manager is not ready");
+
+    }
+
+    public String getBranchAddressByUsername(Account account, String branchName)
+    {
+        if (initialized)
+        {
+            if (ACCOUNT_MANAGER.verifyAccount(account) != null)
+            {
+                if (branchAddress != null)
+                    return branchAddress.get(branchName);
+                else
+                    return null;
+            }
+            else
+                throw new IllegalArgumentException("Invalid account credential");
+        }
+        else
+            throw new RuntimeException("Branch manager is not ready");
+    }
+
+    public void updateBranchAddress(EmployeeAccount account, String address)
+    {
+        if (initialized)
+        {
+            if (ACCOUNT_MANAGER.verifyAccount(account) != null)
+            {
+                firebaseDatabase.getReference().child("branchAddress").child(
+                    account.getUsername()).setValue(address);
+            }
+            else
+                throw new IllegalArgumentException("Invalid account credential");
         }
         else
             throw new RuntimeException("Branch manager is not ready");

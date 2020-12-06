@@ -63,7 +63,8 @@ public class CustomerRatingBranchFragment extends Fragment
                             editTextRateScore.getText().toString());  //Need change when search function done.
                         Toast.makeText(getContext(), "Thanks for rating",
                                        Toast.LENGTH_SHORT).show();
-                        double averageScore = branchManager.getAverageRatingScores(branchName);
+                        double averageScore = branchManager.getBranchAverageRatingScoresByUsername(
+                            account, branchName);
                         databaseReference.child("branchAverageScores").child(
                             "Jinemployee").setValue(averageScore);
                     }

@@ -1,5 +1,6 @@
 package team.returnteamname.servicenovigrad.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -20,12 +21,14 @@ import androidx.fragment.app.FragmentManager;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
 import team.returnteamname.servicenovigrad.R;
+import team.returnteamname.servicenovigrad.account.Account;
 import team.returnteamname.servicenovigrad.account.CustomerAccount;
 import team.returnteamname.servicenovigrad.manager.AccountManager;
 import team.returnteamname.servicenovigrad.manager.BranchManager;
@@ -34,13 +37,14 @@ import team.returnteamname.servicenovigrad.manager.ServiceManager;
 
 public class CustomerSearchBranchFragment extends Fragment
 {
-    private final AccountManager  accountManager = AccountManager.getInstance();
-    private final BranchManager   branchManager  = BranchManager.getInstance();
-    private final ServiceManager  serviceManager = ServiceManager.getInstance();
-    private       ListView        listViewBranch;
-    private       EditText        editTextSearch;
-    private       Button          buttonSearch;
-    private       CustomerAccount account;
+    private final AccountManager accountManager = AccountManager.getInstance();
+    private final BranchManager  branchManager  = BranchManager.getInstance();
+    private final ServiceManager serviceManager = ServiceManager.getInstance();
+    private       ListView       listViewBranch;
+    private       EditText       editTextSearch;
+    private       Button         buttonSearch;
+
+    private CustomerAccount account;
 
     private HashSet<String>  hashSetBranchNames;
     private List<String>     listBranchNames;
@@ -58,17 +62,17 @@ public class CustomerSearchBranchFragment extends Fragment
         editTextSearch = view.findViewById(R.id.editTextSearch);
         buttonSearch   = view.findViewById(R.id.buttonSearch);
 
-        hashSetBranchNames   = new HashSet<>();
-        listBranchNames      = new ArrayList<>();
-        arrayAdapterListView = new ItemArrayAdapter(view.getContext(),
-                                                    R.layout.layout_list_view_branch_item,
-                                                    listBranchNames);
-
-        listViewBranch.setAdapter(arrayAdapterListView);
+        hashSetBranchNames = new HashSet<>();
+        listBranchNames    = new ArrayList<>();
 
         if (bundle != null)
         {
             account = (CustomerAccount) bundle.getSerializable("account");
+
+            arrayAdapterListView = new ItemArrayAdapter(view.getContext(),
+                                                        R.layout.layout_list_view_branch_item,
+                                                        listBranchNames, account);
+            listViewBranch.setAdapter(arrayAdapterListView);
 
             try
             {
@@ -132,7 +136,10 @@ public class CustomerSearchBranchFragment extends Fragment
                     }
                 }
 
-                // TODO: Search for address
+                // Search for address
+                String address = branchManager.getBranchAddressByUsername(account, name);
+                if (address != null && address.matches(searchRegex))
+                    addToList(name);
             }
 
             // Search for types of service
@@ -160,7 +167,6 @@ public class CustomerSearchBranchFragment extends Fragment
     private void onClickItem(AdapterView<?> adapterView, View view, int i, long l)
     {
         String branchName = arrayAdapterListView.getItem(i);
-        Toast.makeText(getContext(), "You clicked " + branchName, Toast.LENGTH_LONG).show();
         replaceFragment(CustomerSelectServiceFragment.class, branchName);
     }
 
@@ -201,15 +207,18 @@ public class CustomerSearchBranchFragment extends Fragment
     {
         private final Context      context;
         private final List<String> branchNameList;
+        private final Account      account;
 
         public ItemArrayAdapter(@NonNull Context context, int resource,
-                                @NotNull List<String> branchNameList)
+                                @NotNull List<String> branchNameList, @NotNull Account account)
         {
             super(context, resource, branchNameList);
             this.context        = context;
             this.branchNameList = branchNameList;
+            this.account        = account;
         }
 
+        @SuppressLint("SetTextI18n")
         @NonNull
         @Override
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent)
@@ -220,8 +229,9 @@ public class CustomerSearchBranchFragment extends Fragment
 
             TextView listEntryBranchName = convertView.findViewById(R.id.listEntryBranchName);
             TextView listAddress         = convertView.findViewById(R.id.listAddress);
+            TextView textViewRating      = convertView.findViewById(R.id.textViewRating);
 
-            // Set text fields
+            // Set branch name
             String branchName = getItem(position);
 
             if (branchName != null)
@@ -229,7 +239,22 @@ public class CustomerSearchBranchFragment extends Fragment
             else
                 listEntryBranchName.setText("Unknown");
 
-            listAddress.setText("Unknown");   // TODO
+            // Set branch address
+            String address = BranchManager.getInstance().getBranchAddressByUsername(account,
+                                                                                    branchName);
+            if (address != null)
+                listAddress.setText(address);
+            else
+                listAddress.setText("Unknown");
+
+            // Set branch rating
+            double rating = BranchManager.getInstance().getBranchAverageRatingScoresByUsername(
+                account, branchName);
+
+            if (rating == 0)
+                textViewRating.setText("Rating: No data");
+            else
+                textViewRating.setText("Rating: " + new DecimalFormat("#.##").format(rating));
 
             return convertView;
         }

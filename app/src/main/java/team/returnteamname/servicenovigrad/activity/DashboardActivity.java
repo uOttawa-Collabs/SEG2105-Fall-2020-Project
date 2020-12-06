@@ -23,13 +23,11 @@ import team.returnteamname.servicenovigrad.fragment.AdminCreateServiceFragment;
 import team.returnteamname.servicenovigrad.fragment.AdminDeleteAccountFragment;
 import team.returnteamname.servicenovigrad.fragment.AdminDeleteServiceFragment;
 import team.returnteamname.servicenovigrad.fragment.AdminEditServiceFragment;
-import team.returnteamname.servicenovigrad.fragment.CustomerRatingBranchFragment;
 import team.returnteamname.servicenovigrad.fragment.CustomerSearchBranchFragment;
-import team.returnteamname.servicenovigrad.fragment.CustomerUploadDocumentFragment;
 import team.returnteamname.servicenovigrad.fragment.EmployeeAddServiceFragment;
 import team.returnteamname.servicenovigrad.fragment.EmployeeDeleteServiceFragment;
+import team.returnteamname.servicenovigrad.fragment.EmployeeEditBranchAddressFragment;
 import team.returnteamname.servicenovigrad.fragment.EmployeeEditWorkingHours;
-import team.returnteamname.servicenovigrad.fragment.EmployeeProcessServiceRequest;
 import team.returnteamname.servicenovigrad.fragment.EmployeeViewServiceRequest;
 import team.returnteamname.servicenovigrad.fragment.HomeFragment;
 
@@ -41,10 +39,11 @@ public class DashboardActivity extends AppCompatActivity
     private static final int ADMIN_DELETE_SERVICE = 3;
     private static final int ADMIN_EDIT_SERVICE   = 4;
 
-    private static final int EMPLOYEE_CREATE_SERVICE     = 0;
-    private static final int EMPLOYEE_DELETE_SERVICE     = 1;
-    private static final int EMPLOYEE_EDIT_WORKING_HOURS = 2;
-    private static final int EMPLOYEE_PROCESS_SERVICE    = 3;
+    private static final int EMPLOYEE_CREATE_SERVICE      = 0;
+    private static final int EMPLOYEE_DELETE_SERVICE      = 1;
+    private static final int EMPLOYEE_EDIT_WORKING_HOURS  = 2;
+    private static final int EMPLOYEE_PROCESS_SERVICE     = 3;
+    private static final int EMPLOYEE_EDIT_BRANCH_ADDRESS = 4;
 
     private static final int CUSTOMER_SEARCH_BRANCH = 0;
 
@@ -98,6 +97,7 @@ public class DashboardActivity extends AppCompatActivity
                 menu.add(Menu.NONE, EMPLOYEE_DELETE_SERVICE, Menu.NONE, "Delete a service");
                 menu.add(Menu.NONE, EMPLOYEE_EDIT_WORKING_HOURS, Menu.NONE, "Edit working hours");
                 menu.add(Menu.NONE, EMPLOYEE_PROCESS_SERVICE, Menu.NONE, "View service requests");
+                menu.add(Menu.NONE, EMPLOYEE_EDIT_BRANCH_ADDRESS, Menu.NONE, "Edit branch address");
                 break;
             case "Customer":
                 menu.add(Menu.NONE, CUSTOMER_SEARCH_BRANCH, Menu.NONE, "Search for a branch");
@@ -158,6 +158,9 @@ public class DashboardActivity extends AppCompatActivity
                         break;
                     case EMPLOYEE_PROCESS_SERVICE:
                         fragmentClass = EmployeeViewServiceRequest.class;
+                        break;
+                    case EMPLOYEE_EDIT_BRANCH_ADDRESS:
+                        fragmentClass = EmployeeEditBranchAddressFragment.class;
                         break;
                     default:
                         fragmentClass = HomeFragment.class;
