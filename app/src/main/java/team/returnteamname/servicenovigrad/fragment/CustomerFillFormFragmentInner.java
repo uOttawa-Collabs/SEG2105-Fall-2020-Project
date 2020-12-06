@@ -102,8 +102,8 @@ public class CustomerFillFormFragmentInner extends Fragment
                             }else{
                                 // validate address, postal code, first and last name. date of birth
                                 // then send everything to the branch
-                                if((editTextValues[0].toString() != account.getFirstName())
-                                   || (editTextValues[1].toString() != account.getLastName())){
+                                if((editTextValues[0].toString().equals(account.getFirstName()) )
+                                   || (editTextValues[1].toString().equals( account.getLastName()))){
                                     Toast.makeText(getContext(),
                                                    "Please make sure that you use correct name",
                                                    Toast.LENGTH_SHORT).show();
