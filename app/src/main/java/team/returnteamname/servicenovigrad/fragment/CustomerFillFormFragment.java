@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -26,6 +28,9 @@ public class CustomerFillFormFragment extends Fragment
 {
     private final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     String[] customerInfo = {"First name","Last Name","DOB","address"};
+    String serviceType;
+    CustomerAccount account;
+    String branchName;
 
     @Nullable
     @Override
@@ -45,16 +50,15 @@ public class CustomerFillFormFragment extends Fragment
 
         DatePicker   customerDOB              = view.findViewById(R.id.datePickerCustomerDOB);
         LinearLayout linearLayoutCustomerForm = view.findViewById(R.id.linearLayoutCustomerForm);
-        Button       buttonSubmit     = view.findViewById(R.id.buttonCustomerFormSubmit);
-
-
-
-        String serviceType = (String) bundle.getSerializable("serviceType");
+        Button       buttonSubmit             = view.findViewById(R.id.buttonCustomerFormSubmit);
+        Button       buttonNext               = view.findViewById(R.id.buttonCustomerFormNext);
 
 
         if (bundle != null)
         {
-            CustomerAccount account = (CustomerAccount) bundle.getSerializable("account");
+            account     = (CustomerAccount) bundle.getSerializable("account");
+            branchName  = (String) bundle.getSerializable("serviceName");
+            serviceType = (String) bundle.getSerializable("serviceType");
 
             try{
                 buttonSubmit.setOnClickListener(
@@ -70,53 +74,83 @@ public class CustomerFillFormFragment extends Fragment
                             {
                                 Toast.makeText(getContext(), "All fields should be entered",
                                                Toast.LENGTH_SHORT).show();
-                            }else{
-                                // validate address, postal code, first and last name. date of birth
-                                // then send everything to the branch
-                                if((editTextValues[0].toString() != account.getFirstName())
-                                   || (editTextValues[1].toString() != account.getLastName())){
-                                    Toast.makeText(getContext(),
-                                                   "Please make sure that you use correct name",
-                                                   Toast.LENGTH_SHORT).show();
-                                }
-
-                                String customerDofB = customerDOB.getDayOfMonth()+"-"
-                                                      +customerDOB.getMonth()+"-"
-                                                      +customerDOB.getYear();
-
-                                // after validate store, editTextValues[0-3], customerOofB to database.
-                                databaseReference.child("branchServiceRequest").child(account.getUsername())
-                                                 .child(serviceType).child("First Name").setValue(editTextValues[0]);
-                                databaseReference.child("branchServiceRequest").child(account.getUsername())
-                                                 .child(serviceType).child("Last Name").setValue(editTextValues[1]);
-                                databaseReference.child("branchServiceRequest").child(account.getUsername())
-                                                 .child(serviceType).child("Address").setValue(editTextValues[2]+", "+editTextValues[3]);
-
-
-
-
                             }
 
+                            else
+                                {
+                                    // validate address, postal code, first and last name. date of birth
+                                    // then send everything to the branch
+                                    if((editTextValues[0].toString() != account.getFirstName())
+                                    || (editTextValues[1].toString() != account.getLastName()))
+                                    {
+                                        Toast.makeText(getContext(),
+                                                   "Please make sure that you use correct name",
+                                                   Toast.LENGTH_SHORT).show();
+                                    }
 
+                                    String customerDofB = customerDOB.getDayOfMonth()+"-"
+                                                        +customerDOB.getMonth()+"-"
+                                                        +customerDOB.getYear();
 
-                        }catch (Exception e) {
+                                    // after validate store, editTextValues[0-3], customerOofB to database.
+                                    databaseReference.child("branchServiceRequest").child(branchName).child(account.getUsername())
+                                                    .child(serviceType).child("First Name").setValue(editTextValues[0]);
+                                    databaseReference.child("branchServiceRequest").child(branchName).child(account.getUsername())
+                                                    .child(serviceType).child("Last Name").setValue(editTextValues[1]);
+                                    databaseReference.child("branchServiceRequest").child(branchName).child(account.getUsername())
+                                                    .child(serviceType).child("Address").setValue(editTextValues[2]+", "+editTextValues[3]);
+                                }
+                            }
+
+                        catch (Exception e)
+                        {
                             Toast.makeText(getContext(), e.getMessage(),
                                            Toast.LENGTH_LONG).show();
                             e.printStackTrace();
                         }
-
-
                     });
-            }catch (Exception e)
+
+                buttonNext.setOnClickListener(this::onClickItem);
+
+            }
+            catch (Exception e)
             {
                 Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                 e.printStackTrace();
             }
-
-        }else
+        }
+        else
             throw new IllegalArgumentException("Invalid argument");
 
-
         return view;
+    }
+
+    private void onClickItem(View view)
+    {
+        replaceFragment(CustomerUploadDocumentFragment.class, branchName, serviceType);
+    }
+
+    private void replaceFragment(Class<? extends Fragment> fragmentClass, String branchName, String serviceType)
+    {
+        try
+        {
+            Fragment fragment = fragmentClass.newInstance();
+
+            Bundle bundleInner = new Bundle();
+            bundleInner.putSerializable("account", account);
+            bundleInner.putSerializable("serviceName", branchName);
+            bundleInner.putSerializable("serviceType", serviceType);
+            fragment.setArguments(bundleInner);
+
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.layoutFragment,
+                                                       fragment).commit();
+        }
+        catch (Exception e)
+        {
+            Toast.makeText(getContext(), e.getMessage(),
+                           Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        }
     }
 }
