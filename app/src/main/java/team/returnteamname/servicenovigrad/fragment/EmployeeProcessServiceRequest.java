@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -29,7 +30,8 @@ public class EmployeeProcessServiceRequest extends Fragment
         Bundle bundle = getArguments();
 
         Button buttonAccept = view.findViewById(R.id.buttonEmployeeAccept);
-        Button buttonReject = view.findViewById(R.id.buttonEmployeeReject);
+        Button   buttonReject = view.findViewById(R.id.buttonEmployeeReject);
+        TextView textViewRequest = view.findViewById(R.id.textViewRequest);
 
 
         String[] status = new String[]{ "Approved", "Rejected", "None" };
