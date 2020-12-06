@@ -104,7 +104,7 @@ public class CustomerSelectServiceFragment extends Fragment
 
         serviceType = serviceNameSequence.toString().trim();
 
-        if(serviceType == "Driver's License")
+        if(serviceType.equals("Driver's License") )
         {
             replaceFragment(CustomerFillFormFragmentInner.class, branchName, serviceType);
         }
