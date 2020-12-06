@@ -88,17 +88,25 @@ public class CustomerFillFormFragment extends Fragment
                                                    Toast.LENGTH_SHORT).show();
                                     }
 
+
+
                                     String customerDofB = customerDOB.getDayOfMonth()+"-"
                                                         +customerDOB.getMonth()+"-"
                                                         +customerDOB.getYear();
 
+                                    String address = editTextValues[2].getText().toString()+", "+editTextValues[3].getText().toString();
+
                                     // after validate store, editTextValues[0-3], customerOofB to database.
                                     databaseReference.child("branchServiceRequest").child(branchName).child(account.getUsername())
-                                                    .child(serviceType).child("First Name").setValue(editTextValues[0]);
+                                                    .child(serviceType).child("First Name").setValue(account.getFirstName());
                                     databaseReference.child("branchServiceRequest").child(branchName).child(account.getUsername())
-                                                    .child(serviceType).child("Last Name").setValue(editTextValues[1]);
+                                                    .child(serviceType).child("Last Name").setValue(account.getLastName());
                                     databaseReference.child("branchServiceRequest").child(branchName).child(account.getUsername())
-                                                    .child(serviceType).child("Address").setValue(editTextValues[2]+", "+editTextValues[3]);
+                                                    .child(serviceType).child("Address").setValue(address);
+                                    databaseReference.child("branchServiceRequest").child(branchName).child(account.getUsername())
+                                                     .child(serviceType).child("Date Of Birth").setValue(customerDofB);
+                                    Toast.makeText(getContext(), "submission success",
+                                                   Toast.LENGTH_LONG).show();
                                 }
                             }
 
