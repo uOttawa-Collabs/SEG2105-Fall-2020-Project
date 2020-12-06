@@ -29,6 +29,7 @@ public class BranchManager
     private HashMap<String, HashMap<String, String>> employeeServices;
     private HashMap<String, HashMap<String, String>> branchWorkingHours;
     private HashMap<String, HashMap<String, String>> branchRatingScores;
+    private HashMap<String, HashMap<String, String>> branchServiceRequest;
 
     private BranchManager() {}
 
@@ -111,6 +112,23 @@ public class BranchManager
                         throw error.toException();
                     }
                 });
+
+            reference.child("branchServiceRequest").addValueEventListener(
+                new ValueEventListener()
+                {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot)
+                    {
+                        branchServiceRequest = (HashMap<String, HashMap<String, String>>) snapshot.getValue();
+                        checkIfInitialized();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error)
+                    {
+                        throw error.toException();
+                    }
+                });
         }
     }
 
@@ -142,6 +160,25 @@ public class BranchManager
             {
                 String              name = account.getUsername();
                 Map<String, String> map  = employeeServices.get(name);
+                if (map != null)
+                    return map.keySet().toArray(new String[0]);
+                else
+                    return null;
+            }
+            else
+                throw new IllegalArgumentException("Invalid account credential");
+        }
+        else
+            throw new RuntimeException("Branch manager is not ready");
+    }
+    public String[] getEmployeeServicesRequest(EmployeeAccount account)
+    {
+        if (initialized)
+        {
+            if (ACCOUNT_MANAGER.verifyAccount(account) != null)
+            {
+                String              name = account.getUsername();
+                Map<String, String> map  = branchServiceRequest.get(name);
                 if (map != null)
                     return map.keySet().toArray(new String[0]);
                 else

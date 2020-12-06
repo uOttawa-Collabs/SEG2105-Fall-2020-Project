@@ -30,6 +30,7 @@ import team.returnteamname.servicenovigrad.fragment.EmployeeAddServiceFragment;
 import team.returnteamname.servicenovigrad.fragment.EmployeeDeleteServiceFragment;
 import team.returnteamname.servicenovigrad.fragment.EmployeeEditWorkingHours;
 import team.returnteamname.servicenovigrad.fragment.EmployeeProcessServiceRequest;
+import team.returnteamname.servicenovigrad.fragment.EmployeeViewServiceRequest;
 import team.returnteamname.servicenovigrad.fragment.HomeFragment;
 
 public class DashboardActivity extends AppCompatActivity
@@ -161,7 +162,7 @@ public class DashboardActivity extends AppCompatActivity
                         fragmentClass = EmployeeEditWorkingHours.class;
                         break;
                     case EMPLOYEE_PROCESS_SERVICE:
-                        fragmentClass = EmployeeProcessServiceRequest.class;
+                        fragmentClass = EmployeeViewServiceRequest.class;
                         break;
                     default:
                         fragmentClass = HomeFragment.class;
