@@ -13,6 +13,7 @@ import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -39,9 +41,11 @@ public class CustomerUploadDocumentFragment extends Fragment
     private        final FirebaseDatabase firebaseDatabase      = FirebaseDatabase.getInstance();
     private static final int              CAMERA_REQUEST        = 10;
     private static final int              IMAGE_GALLERY_REQUEST = 20;
-    ImageView preview;
-    Uri imageUri;
-    Bitmap previewImage;
+    private              CustomerAccount  account;
+    private              String           branchName;
+    private              ImageView        preview;
+    private              Uri              imageUri;
+    private              Bitmap           previewImage;
 
     @Nullable
     @Override
@@ -60,7 +64,8 @@ public class CustomerUploadDocumentFragment extends Fragment
 
         if(bundle != null)
         {
-            CustomerAccount customerAccount = (CustomerAccount) bundle.getSerializable("account");
+            account = (CustomerAccount) bundle.getSerializable("account");
+            branchName = (String) bundle.getSerializable("serviceName");
 
             try
             {
@@ -88,16 +93,11 @@ public class CustomerUploadDocumentFragment extends Fragment
                     {
                         DatabaseReference databaseReference = firebaseDatabase.getReference();
                         String imageStr = bitmapToBase64(previewImage);
-                        databaseReference.child("documents").child("Jinemployee").child(customerAccount.getUsername()).setValue(imageStr);
+                        databaseReference.child("documents").child(branchName).child(account.getUsername()).setValue(imageStr);
                         Toast.makeText(getContext(), "Submit successfully", Toast.LENGTH_SHORT).show();
                     });
 
-                /*buttonNext.setOnClickListener(
-                    v ->
-                    {
-                       Intent intentLayout = new Intent(view.getContext(), CustomerRatingBranchFragment.class);
-                       view.getContext().startActivity(intentLayout);
-                    });*/
+                buttonNext.setOnClickListener(this::onClickItem);
             }
             catch (Exception e)
             {
@@ -178,5 +178,33 @@ public class CustomerUploadDocumentFragment extends Fragment
         }
 
         return result;
+    }
+
+    private void onClickItem(View view)
+    {
+        replaceFragment(CustomerRatingBranchFragment.class, branchName);
+    }
+
+    private void replaceFragment(Class<? extends Fragment> fragmentClass, String branchName)
+    {
+        try
+        {
+            Fragment fragment = fragmentClass.newInstance();
+
+            Bundle bundleInner = new Bundle();
+            bundleInner.putSerializable("account", account);
+            bundleInner.putSerializable("serviceName", branchName);
+            fragment.setArguments(bundleInner);
+
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.layoutFragment,
+                                                       fragment).commit();
+        }
+        catch (Exception e)
+        {
+            Toast.makeText(getContext(), e.getMessage(),
+                           Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        }
     }
 }

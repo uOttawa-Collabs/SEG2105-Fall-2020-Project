@@ -24,6 +24,8 @@ public class CustomerRatingBranchFragment extends Fragment
 {
     private final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private       RatingBar        ratingBar;
+    private       String           branchName;
+    private       CustomerAccount  account;
 
     @Nullable
     @Override
@@ -41,7 +43,8 @@ public class CustomerRatingBranchFragment extends Fragment
 
         if (bundle != null)
         {
-            CustomerAccount customerAccount = (CustomerAccount) bundle.getSerializable("account");
+            account = (CustomerAccount) bundle.getSerializable("account");
+            branchName = (String) bundle.getSerializable("serviceName");
 
             try
             {
@@ -55,13 +58,12 @@ public class CustomerRatingBranchFragment extends Fragment
                 buttonRate.setOnClickListener(
                     v ->
                     {
-                        //EmployeeAccount branchName = new EmployeeAccount();    Need change when search function done.
-                        databaseReference.child("ratingScores").child("Jinemployee").child(
-                            customerAccount.getUsername()).setValue(
+                        databaseReference.child("ratingScores").child(branchName).child(
+                            account.getUsername()).setValue(
                             editTextRateScore.getText().toString());  //Need change when search function done.
                         Toast.makeText(getContext(), "Thanks for rating",
                                        Toast.LENGTH_SHORT).show();
-                        double averageScore = branchManager.getAverageRatingScores("Jinemployee");
+                        double averageScore = branchManager.getAverageRatingScores(branchName);
                         databaseReference.child("branchAverageScores").child(
                             "Jinemployee").setValue(averageScore);
                     }
