@@ -161,7 +161,7 @@ public class CustomerSearchBranchFragment extends Fragment
     {
         String branchName = arrayAdapterListView.getItem(i);
         Toast.makeText(getContext(), "You clicked " + branchName, Toast.LENGTH_LONG).show();
-        //replaceFragment(CustomerSelectServiceFragment.class, branchName);
+        replaceFragment(CustomerSelectServiceFragment.class, branchName);
     }
 
     private void addToList(String branchName)

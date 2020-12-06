@@ -173,6 +173,20 @@ public class BranchManager
             throw new RuntimeException("Branch manager is not ready");
     }
 
+    public String[] getEmployeeServicesByUsernameOnly(String username)
+    {
+        if (initialized)
+        {
+            Map<String, String> map = employeeServices.get(username);
+            if (map != null)
+                return map.keySet().toArray(new String[0]);
+            else
+                return null;
+        }
+        else
+            throw new RuntimeException("Branch manager is not ready");
+    }
+
     public HashMap<String, HashMap<String, String>> getAllEmployeeWorkingHours(AdminAccount account)
     {
         if (initialized)

@@ -38,14 +38,15 @@ import java.io.IOException;
 
 public class CustomerUploadDocumentFragment extends Fragment
 {
-    private        final FirebaseDatabase firebaseDatabase      = FirebaseDatabase.getInstance();
-    private static final int              CAMERA_REQUEST        = 10;
-    private static final int              IMAGE_GALLERY_REQUEST = 20;
     private              CustomerAccount  account;
     private              String           branchName;
+    private              String           serviceType;
     private              ImageView        preview;
     private              Uri              imageUri;
     private              Bitmap           previewImage;
+    private static final int              CAMERA_REQUEST        = 10;
+    private static final int              IMAGE_GALLERY_REQUEST = 20;
+    private        final FirebaseDatabase firebaseDatabase      = FirebaseDatabase.getInstance();
 
     @Nullable
     @Override
@@ -66,6 +67,7 @@ public class CustomerUploadDocumentFragment extends Fragment
         {
             account = (CustomerAccount) bundle.getSerializable("account");
             branchName = (String) bundle.getSerializable("serviceName");
+            serviceType = (String) bundle.getSerializable("serviceType");
 
             try
             {
@@ -93,7 +95,7 @@ public class CustomerUploadDocumentFragment extends Fragment
                     {
                         DatabaseReference databaseReference = firebaseDatabase.getReference();
                         String imageStr = bitmapToBase64(previewImage);
-                        databaseReference.child("documents").child(branchName).child(account.getUsername()).setValue(imageStr);
+                        databaseReference.child("documents").child(branchName).child(serviceType).child(account.getUsername()).setValue(imageStr);
                         Toast.makeText(getContext(), "Submit successfully", Toast.LENGTH_SHORT).show();
                     });
 
