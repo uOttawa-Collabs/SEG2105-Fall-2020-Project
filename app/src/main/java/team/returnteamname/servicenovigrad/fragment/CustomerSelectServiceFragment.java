@@ -25,12 +25,12 @@ import team.returnteamname.servicenovigrad.manager.BranchManager;
 
 public class CustomerSelectServiceFragment extends Fragment
 {
-    private final BranchManager branchManager = BranchManager.getInstance();
-    private ListView listViewService;
-    private EditText editTextSelect;
-    private Button          buttonSelect;
-    private CustomerAccount account;
-    private String branchName;
+    private final BranchManager   branchManager = BranchManager.getInstance();
+    private       ListView        listViewService;
+    private       EditText        editTextSelect;
+    private       Button          buttonSelect;
+    private       CustomerAccount account;
+    private       String          branchName;
 
     @Nullable
     @Override
@@ -42,8 +42,8 @@ public class CustomerSelectServiceFragment extends Fragment
         Bundle        bundle        = getArguments();
 
         listViewService = view.findViewById(R.id.listViewService);
-        editTextSelect = view.findViewById(R.id.editTextSelect);
-        buttonSelect = view.findViewById(R.id.buttonSelect);
+        editTextSelect  = view.findViewById(R.id.editTextSelect);
+        buttonSelect    = view.findViewById(R.id.buttonSelect);
 
         if (bundle != null)
         {
@@ -103,8 +103,16 @@ public class CustomerSelectServiceFragment extends Fragment
         }
 
         serviceType = serviceNameSequence.toString().trim();
-        replaceFragment(CustomerUploadDocumentFragment.class, branchName, serviceType);
-        //replaceFragment(CustomerFillFormFragment.class, branchName);
+
+        if(serviceType == "Driver's License")
+        {
+            replaceFragment(CustomerFillFormFragmentInner.class, branchName, serviceType);
+        }
+        else
+        {
+            replaceFragment(CustomerFillFormFragment.class, branchName, serviceType);
+        }
+
     }
 
     private void replaceFragment(Class<? extends Fragment> fragmentClass, String branchName, String serviceType)

@@ -9,7 +9,7 @@
         android:layout_width="279dp"
         android:layout_height="346dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/layoutSubmitButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -60,14 +60,33 @@
             android:datePickerMode="spinner" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/buttonCustomerFormSubmit"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/layoutSubmitButton"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="SUMBIT"
+        android:layout_marginVertical="15dp"
+        android:gravity="center"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayoutCustomerForm" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayoutCustomerForm">
+
+        <Button
+            android:id="@+id/buttonCustomerFormSubmit"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_marginHorizontal="10dp"
+            android:text="Submit"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/buttonCustomerFormNext"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_marginHorizontal="10dp"
+            android:text="Next"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
