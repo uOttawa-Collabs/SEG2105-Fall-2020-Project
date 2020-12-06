@@ -115,13 +115,18 @@ public class CustomerFillFormFragmentInner extends Fragment
 
                                 // after validate store, editTextValues[0-3], customerOofB to database.
                                 databaseReference.child("branchServiceRequest").child(branchName).child(account.getUsername())
-                                                 .child(serviceType).child("First Name").setValue(editTextValues[0]);
+                                                 .child(serviceType).child("First Name").setValue(editTextValues[0].getText().toString());
                                 databaseReference.child("branchServiceRequest").child(branchName).child(account.getUsername())
-                                                 .child(serviceType).child("Last Name").setValue(editTextValues[1]);
+                                                 .child(serviceType).child("Last Name").setValue(editTextValues[1].getText().toString());
                                 databaseReference.child("branchServiceRequest").child(branchName).child(account.getUsername())
-                                                 .child(serviceType).child("Address").setValue(editTextValues[2]+", "+editTextValues[3]);
+                                                 .child(serviceType).child("Address").setValue(editTextValues[2].getText().toString()+", "+editTextValues[3].getText().toString());
+                                databaseReference.child("branchServiceRequest").child(branchName).child(account.getUsername())
+                                                 .child(serviceType).child("Date Of Birth").setValue(customerDofB);
                                 databaseReference.child("branchServiceRequest").child(branchName).child(account.getUsername())
                                                  .child(serviceType).child("License Type").setValue(values[selectedIndex]);
+
+                                Toast.makeText(getContext(), "submission success",
+                                               Toast.LENGTH_LONG).show();
 
                             }
 

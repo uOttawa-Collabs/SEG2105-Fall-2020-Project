@@ -95,7 +95,7 @@ public class CustomerUploadDocumentFragment extends Fragment
                     {
                         DatabaseReference databaseReference = firebaseDatabase.getReference();
                         String imageStr = bitmapToBase64(previewImage);
-                        databaseReference.child("documents").child(branchName).child(serviceType).child(account.getUsername()).setValue(imageStr);
+                        databaseReference.child("branchServiceRequest").child(branchName).child(account.getUsername()).child(serviceType).child("Document").setValue(imageStr);
                         Toast.makeText(getContext(), "Submit successfully", Toast.LENGTH_SHORT).show();
                     });
 
