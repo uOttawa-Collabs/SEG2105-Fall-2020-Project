@@ -55,27 +55,40 @@ public class EmployeeAddServiceFragment extends Fragment
 
                 ArrayList<String> allServiceNameList = new ArrayList<>(
                     Arrays.asList(allServiceName));
-                ArrayList<String> branchServiceNameList = new ArrayList<>(
-                    Arrays.asList(branchServiceName));
                 ArrayList<String> serviceNamesList = new ArrayList<>();
 
-                for (int i = 1; i < allServiceNameList.size(); i++)
+                if(branchServiceName != null)
                 {
-                    boolean flag = false;
-                    for (int j = 0; j < branchServiceNameList.size(); j++)
+                    ArrayList<String> branchServiceNameList = new ArrayList<>(
+                        Arrays.asList(branchServiceName));
+
+                    for (int i = 1; i < allServiceNameList.size(); i++)
                     {
-                        if (allServiceNameList.get(i).equals(branchServiceNameList.get(j)))
+                        boolean flag = false;
+
+                        for (int j = 0; j < branchServiceNameList.size(); j++)
                         {
-                            flag = true;
-                            break;
+                            if (allServiceNameList.get(i).equals(branchServiceNameList.get(j)))
+                            {
+                                flag = true;
+                                break;
+                            }
+                        }
+
+                        if (!flag)
+                        {
+                            serviceNamesList.add(allServiceNameList.get(i));
                         }
                     }
-
-                    if (!flag)
-                    {
-                        serviceNamesList.add(allServiceNameList.get(i));
-                    }
                 }
+
+                else
+                    {
+                        for (int i = 1; i < allServiceNameList.size(); i++)
+                        {
+                            serviceNamesList.add(allServiceNameList.get(i));
+                        }
+                    }
 
                 String[]     serviceNames    = serviceNamesList.toArray(new String[0]);
                 List<String> serviceNameList = new ArrayList<>();

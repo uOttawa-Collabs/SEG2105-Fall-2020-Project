@@ -37,7 +37,7 @@ public class EmployeeDeleteServiceFragment extends Fragment
                                      container, false);
         Bundle        bundle        = getArguments();
         BranchManager branchManager = BranchManager.getInstance();
-
+        ArrayAdapter<String> adapter;
         ListView listViewService = view.findViewById(R.id.listViewService);
         EditText editTextService = view.findViewById(R.id.editTextService);
         Button   buttonDelete    = view.findViewById(R.id.buttonDelete);
@@ -57,52 +57,55 @@ public class EmployeeDeleteServiceFragment extends Fragment
                         if (serviceName != null)
                             serviceNameList.add(serviceName);
                     }
+                    adapter = new ArrayAdapter<>(
+                        getContext(),
+                        android.R.layout.simple_list_item_1,
+                        serviceNameList);
+
+                    listViewService.setAdapter(adapter);
+                    listViewService.setOnItemClickListener(
+                        (parent, view1, position, id) ->
+                            editTextService.setText(serviceNameList.get(position))
+                    );
+                    buttonDelete.setOnClickListener(
+                        v ->
+                        {
+                            CharSequence      serviceNameSequence = editTextService.getText();
+                            String            serviceName;
+                            DatabaseReference databaseReference   = firebaseDatabase.getReference();
+
+                            if (serviceNameSequence == null
+                                || (serviceName = serviceNameSequence.toString().trim()).equals(""))
+                            {
+                                Toast.makeText(getContext(), "Field cannot be empty",
+                                               Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
+                            try
+                            {
+                                databaseReference.child("branchServices").child(serviceName).child(
+                                    account.getUsername()).removeValue();
+                                databaseReference.child("employeeServices").child(
+                                    account.getUsername()).child(serviceName).removeValue();
+
+                                editTextService.setText("");
+                                adapter.remove(serviceName);
+                                Toast.makeText(getContext(), "Success", Toast.LENGTH_SHORT).show();
+                            }
+                            catch (Exception e)
+                            {
+                                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                                e.printStackTrace();
+                            }
+                        }
+                    );
+
                 }
-
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                    getContext(),
-                    android.R.layout.simple_list_item_1,
-                    serviceNameList);
-
-                listViewService.setAdapter(adapter);
-                listViewService.setOnItemClickListener(
-                    (parent, view1, position, id) ->
-                        editTextService.setText(serviceNameList.get(position))
-                );
-
-                buttonDelete.setOnClickListener(
-                    v ->
-                    {
-                        CharSequence      serviceNameSequence = editTextService.getText();
-                        String            serviceName;
-                        DatabaseReference databaseReference   = firebaseDatabase.getReference();
-
-                        if (serviceNameSequence == null
-                            || (serviceName = serviceNameSequence.toString().trim()).equals(""))
-                        {
-                            Toast.makeText(getContext(), "Field cannot be empty",
-                                           Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-
-                        try
-                        {
-                            databaseReference.child("branchServices").child(serviceName).child(
-                                account.getUsername()).removeValue();
-                            databaseReference.child("employeeServices").child(
-                                account.getUsername()).child(serviceName).removeValue();
-
-                            editTextService.setText("");
-                            adapter.remove(serviceName);
-                            Toast.makeText(getContext(), "Success", Toast.LENGTH_SHORT).show();
-                        }
-                        catch (Exception e)
-                        {
-                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-                            e.printStackTrace();
-                        }
-                    }
-                );
+                else
+                {
+                    Toast.makeText(getContext(), "No service can be deleted", Toast.LENGTH_SHORT).show();
+                }
 
             }
             catch (Exception e)
