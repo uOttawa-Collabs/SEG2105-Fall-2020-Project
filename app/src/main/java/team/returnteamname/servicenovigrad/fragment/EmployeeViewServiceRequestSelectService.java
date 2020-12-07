@@ -15,66 +15,63 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import team.returnteamname.servicenovigrad.R;
+import team.returnteamname.servicenovigrad.account.CustomerAccount;
 import team.returnteamname.servicenovigrad.account.EmployeeAccount;
 import team.returnteamname.servicenovigrad.manager.BranchManager;
 import team.returnteamname.servicenovigrad.manager.ServiceManager;
 
-public class EmployeeViewServiceRequest extends Fragment
+public class EmployeeViewServiceRequestSelectService extends Fragment
 {
-    EmployeeAccount account;
-    EditText selectedServiceRequest;
-    ListView listViewCustomerName;
+    private final BranchManager   branchManager = BranchManager.getInstance();
+    private       ListView        listViewServiceType;
+    private       EditText        editTextSelect;
+    private Button          buttonSelect;
+    private EmployeeAccount employeeAccount;
+    private String customerName;
+    private String          branchName;
 
+    private final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+
+    @Nullable
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState)
     {
-        View view = inflater.inflate(R.layout.fragment_employee_view_service_request,
+        View view = inflater.inflate(R.layout.fragment_employee_view_request_select_service_type,
                                      container, false);
 
         Bundle        bundle        = getArguments();
         BranchManager branchManager = BranchManager.getInstance();
 
-
-        selectedServiceRequest = view.findViewById(R.id.editTextSelectServiceRequest);
-        listViewCustomerName = view.findViewById(R.id.viewServiceRequest);
-        Button select = view.findViewById(R.id.buttonEmployeeSelectServiceRequest);
+        listViewServiceType = view.findViewById(R.id.listViewService);
+        editTextSelect = view.findViewById(R.id.editTextSelect);
+        buttonSelect       = view.findViewById(R.id.buttonSelect);
 
         if (bundle != null)
         {
-            account = (EmployeeAccount) bundle.getSerializable("account");
+            employeeAccount = (EmployeeAccount) bundle.getSerializable("account");
+            customerName = (String) bundle.getSerializable("customerName");
+
             try
             {
-
-                String[] branchServiceName = branchManager.getEmployeeServicesRequest(account);
-
-                ArrayList<String> branchServiceNameList = new ArrayList<>(
-                    Arrays.asList(branchServiceName));
-                ArrayList<String> serviceNamesList = new ArrayList<>();
-
-                for (int i = 0; i < branchServiceNameList.size(); i++)
-                {
-                    serviceNamesList.add(branchServiceNameList.get(i));
-                }
-
-
-                String[]     serviceNames    = serviceNamesList.toArray(new String[0]);
+                String[] serviceNames = branchManager.getEmployeeServicesType(employeeAccount, customerName);
                 List<String> serviceNameList = new ArrayList<>();
 
-                for (String serviceName : serviceNames)
+                if (serviceNames != null)
                 {
-                    if (serviceName != null)
-                        serviceNameList.add(serviceName);
-                }
-
-                if (serviceNamesList.size() == 0)
-                {
-                    Toast.makeText(getContext(), "No service request can be found",
-                                   Toast.LENGTH_SHORT).show();
+                    for (String serviceName : serviceNames)
+                    {
+                        if (serviceName != null)
+                            serviceNameList.add(serviceName);
+                    }
                 }
 
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(
@@ -82,57 +79,57 @@ public class EmployeeViewServiceRequest extends Fragment
                     android.R.layout.simple_list_item_1,
                     serviceNameList);
 
-                listViewCustomerName.setAdapter(adapter);
-                listViewCustomerName.setOnItemClickListener(
+                listViewServiceType.setAdapter(adapter);
+                listViewServiceType.setOnItemClickListener(
                     (parent, view1, position, id) ->
-                        selectedServiceRequest.setText(serviceNameList.get(position))
+                        editTextSelect.setText(serviceNameList.get(position))
                 );
 
-                select.setOnClickListener(this::onClickItem);
+                buttonSelect.setOnClickListener(this::onClickItem);
+
             }
-
-
-            catch (Exception e)
+            catch(Exception e)
             {
-                Toast.makeText(getContext(), e.getMessage(),
-                               Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                 e.printStackTrace();
             }
         }
-
         else
             throw new IllegalArgumentException("Invalid argument");
 
         return view;
+
     }
 
     private void onClickItem(View view)
     {
-        CharSequence serviceNameSequence = selectedServiceRequest.getText();
-        String       customerName;
+        String serviceType;
+        CharSequence serviceNameSequence = editTextSelect.getText();
 
         if (serviceNameSequence == null
-            || (customerName = serviceNameSequence.toString().trim()).equals(""))
+            || (serviceType = serviceNameSequence.toString().trim()).equals(""))
         {
             Toast.makeText(getContext(), "Field cannot be empty",
                            Toast.LENGTH_SHORT).show();
             return;
         }
 
-        customerName = serviceNameSequence.toString().trim();
-        replaceFragment(EmployeeViewServiceRequestSelectService.class, customerName);
+        serviceType = serviceNameSequence.toString().trim();
+
+        replaceFragment(EmployeeProcessServiceRequest.class, branchName, serviceType);
 
     }
 
-    private void replaceFragment(Class<? extends Fragment> fragmentClass, String customerName)
+    private void replaceFragment(Class<? extends Fragment> fragmentClass, String accountName, String serviceType)
     {
         try
         {
             Fragment fragment = fragmentClass.newInstance();
 
             Bundle bundleInner = new Bundle();
-            bundleInner.putSerializable("account", account);
+            bundleInner.putSerializable("account", employeeAccount);
             bundleInner.putSerializable("customerName", customerName);
+            bundleInner.putSerializable("serviceType", serviceType);
             fragment.setArguments(bundleInner);
 
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();

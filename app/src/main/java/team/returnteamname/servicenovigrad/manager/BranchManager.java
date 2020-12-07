@@ -10,6 +10,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import team.returnteamname.servicenovigrad.account.Account;
@@ -30,8 +31,8 @@ public class BranchManager
     private HashMap<String, HashMap<String, String>> branchWorkingHours;
     private HashMap<String, HashMap<String, String>> branchRatingScores;
     private HashMap<String, HashMap<String, String>> branchServiceRequest;
+    private HashMap<String, HashMap<String, HashMap<String, HashMap<String, String>>>> branchServiceType;
     private HashMap<String, String>                  branchAddress;
-
     private BranchManager() {}
 
     public static BranchManager getInstance()
@@ -121,6 +122,7 @@ public class BranchManager
                     public void onDataChange(@NonNull DataSnapshot snapshot)
                     {
                         branchServiceRequest = (HashMap<String, HashMap<String, String>>) snapshot.getValue();
+                        branchServiceType = (HashMap<String, HashMap<String, HashMap<String, HashMap<String, String>>>>) snapshot.getValue();
                         checkIfInitialized();
                     }
 
@@ -130,6 +132,7 @@ public class BranchManager
                         throw error.toException();
                     }
                 });
+
 
             reference.child("branchAddress").addValueEventListener(
                 new ValueEventListener()
@@ -210,6 +213,73 @@ public class BranchManager
             throw new RuntimeException("Branch manager is not ready");
     }
 
+    public String[] getEmployeeServicesType(EmployeeAccount account, String customerName)
+    {
+        if (initialized)
+        {
+            if (ACCOUNT_MANAGER.verifyAccount(account) != null)
+            {
+                String              EmployeeName = account.getUsername();
+                HashMap<String, HashMap<String, HashMap<String, String>>> map1  = branchServiceType.get(EmployeeName);
+                HashMap<String, HashMap<String, String>> map2 = map1.get(customerName);
+
+
+                if (map2 != null)
+                    return map2.keySet().toArray(new String[0]);
+                else
+                    return null;
+            }
+            else
+                throw new IllegalArgumentException("Invalid account credential");
+        }
+        else
+            throw new RuntimeException("Branch manager is not ready");
+    }
+
+    public String[] getRequestCustomerSubmission(EmployeeAccount account, String customerName, String serviceType)
+    {
+        if (initialized)
+        {
+            if (ACCOUNT_MANAGER.verifyAccount(account) != null)
+            {
+                String              EmployeeName = account.getUsername();
+                HashMap<String, HashMap<String, HashMap<String, String>>> map1  = branchServiceType.get(EmployeeName);
+                HashMap<String, HashMap<String, String>> map2 = map1.get(customerName);
+                HashMap<String, String> map3 = map2.get(serviceType);
+                List<String>    customerSubmissionValue = new ArrayList<>();
+                List<String>    customerSubmissionKey = new ArrayList<>();
+                List<String>    customerSubmission = new ArrayList<>();
+
+                if(map3 != null)
+                {
+                    for(String key: map3.keySet())
+                    {
+                        customerSubmissionKey.add(key);
+                    }
+                    for(String key: map3.keySet())
+                    {
+                        String value = map3.get(key);
+                        customerSubmissionValue.add(value);
+                    }
+
+                    for(int i=0; i<customerSubmissionKey.size(); i++)
+                    {
+                        String combine = customerSubmissionKey.get(i) + ": " + customerSubmissionValue.get(i);
+                        customerSubmission.add(combine);
+                    }
+
+                    return customerSubmission == null ? null : customerSubmission.toArray(new String[0]);
+                }
+                else
+                    return null;
+            }
+            else
+                throw new IllegalArgumentException("Invalid account credential");
+        }
+        else
+            throw new RuntimeException("Branch manager is not ready");
+    }
+
     public String[] getEmployeeServicesByUsername(Account account, String username)
     {
         if (initialized)
@@ -228,6 +298,8 @@ public class BranchManager
         else
             throw new RuntimeException("Branch manager is not ready");
     }
+
+
 
     public String[] getEmployeeServicesByUsernameOnly(String username)
     {
