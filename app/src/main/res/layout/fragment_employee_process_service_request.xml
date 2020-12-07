@@ -20,6 +20,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toTopOf="@id/listViewCustomerInfo" />
 
+
     <ListView
         android:id="@+id/listViewCustomerInfo"
         android:layout_width="match_parent"
