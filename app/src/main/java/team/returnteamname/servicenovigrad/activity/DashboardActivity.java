@@ -24,6 +24,7 @@ import team.returnteamname.servicenovigrad.fragment.AdminDeleteAccountFragment;
 import team.returnteamname.servicenovigrad.fragment.AdminDeleteServiceFragment;
 import team.returnteamname.servicenovigrad.fragment.AdminEditServiceFragment;
 import team.returnteamname.servicenovigrad.fragment.CustomerSearchBranchFragment;
+import team.returnteamname.servicenovigrad.fragment.CustomerViewMySubmission;
 import team.returnteamname.servicenovigrad.fragment.EmployeeAddServiceFragment;
 import team.returnteamname.servicenovigrad.fragment.EmployeeDeleteServiceFragment;
 import team.returnteamname.servicenovigrad.fragment.EmployeeEditBranchAddressFragment;
@@ -46,6 +47,7 @@ public class DashboardActivity extends AppCompatActivity
     private static final int EMPLOYEE_EDIT_BRANCH_ADDRESS = 4;
 
     private static final int CUSTOMER_SEARCH_BRANCH = 0;
+    private static final int CUSTOMER_VIEW_SUBMISSION = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -101,6 +103,7 @@ public class DashboardActivity extends AppCompatActivity
                 break;
             case "Customer":
                 menu.add(Menu.NONE, CUSTOMER_SEARCH_BRANCH, Menu.NONE, "Search for a branch");
+                menu.add(Menu.NONE, CUSTOMER_VIEW_SUBMISSION, Menu.NONE, "View my submission");
                 break;
         }
 
@@ -172,6 +175,9 @@ public class DashboardActivity extends AppCompatActivity
                 {
                     case CUSTOMER_SEARCH_BRANCH:
                         fragmentClass = CustomerSearchBranchFragment.class;
+                        break;
+                    case CUSTOMER_VIEW_SUBMISSION:
+                        fragmentClass = CustomerViewMySubmission.class;
                         break;
                     default:
                         fragmentClass = HomeFragment.class;
