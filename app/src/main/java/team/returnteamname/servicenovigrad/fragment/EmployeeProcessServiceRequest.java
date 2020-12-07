@@ -78,8 +78,8 @@ public class EmployeeProcessServiceRequest extends Fragment
 
                 DatabaseReference databaseReference = firebaseDatabase.getReference();
                 databaseReference.child("branchServiceRequest").child(
-                    employeeAccount.getUsername()).child("customer name").child(
-                    "healthCard").setValue(status[2]);
+                    employeeAccount.getUsername()).child(customerName).child(
+                    serviceType).child("status").setValue(status[2]);
 
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(
                     getContext(),
@@ -92,8 +92,8 @@ public class EmployeeProcessServiceRequest extends Fragment
                     v ->
                     {
                         databaseReference.child("branchServiceRequest").child(
-                            employeeAccount.getUsername()).child("customer name").child(
-                            "healthCard").setValue(status[0]);
+                            employeeAccount.getUsername()).child(customerName).child(
+                            serviceType).child("status").setValue(status[0]);
                         Toast.makeText(getContext(), "Documents approved",
                                        Toast.LENGTH_SHORT).show();
                     });
@@ -102,8 +102,8 @@ public class EmployeeProcessServiceRequest extends Fragment
                     v ->
                     {
                         databaseReference.child("branchServiceRequest").child(
-                            employeeAccount.getUsername()).child("customer name").child(
-                            "healthCard").setValue(status[1]);
+                            employeeAccount.getUsername()).child(customerName).child(
+                            serviceType).child("status").setValue(status[1]);
                         Toast.makeText(getContext(), "Documents Rejected",
                                        Toast.LENGTH_SHORT).show();
                     });

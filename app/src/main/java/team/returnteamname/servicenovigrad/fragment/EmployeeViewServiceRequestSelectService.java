@@ -37,6 +37,7 @@ public class EmployeeViewServiceRequestSelectService extends Fragment
     private EmployeeAccount employeeAccount;
     private String customerName;
     private String          branchName;
+    String serviceType;
 
     private final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
 
@@ -103,7 +104,7 @@ public class EmployeeViewServiceRequestSelectService extends Fragment
 
     private void onClickItem(View view)
     {
-        String serviceType;
+
         CharSequence serviceNameSequence = editTextSelect.getText();
 
         if (serviceNameSequence == null
